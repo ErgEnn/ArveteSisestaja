@@ -19,7 +19,6 @@ namespace ArveteSisestaja {
 		};//All settings must be registered here in order for them to be loaded
 
 		public static event SettingsChangedEvent SettingsChanged;
-
 		public delegate void SettingsChangedEvent(SettingsChangedEventArgs scea);
 
 
