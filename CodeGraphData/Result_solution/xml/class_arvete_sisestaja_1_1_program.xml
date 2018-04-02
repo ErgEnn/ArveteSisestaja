@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.6">
+  <compounddef id="class_arvete_sisestaja_1_1_program" kind="class" prot="public">
+    <compoundname>ArveteSisestaja::Program</compoundname>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_arvete_sisestaja_1_1_program_1a6d33aa859d318725900848f48fc37386" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void ArveteSisestaja.Program.Main</definition>
+        <argsstring>()</argsstring>
+        <name>Main</name>
+        <briefdescription>
+<para>The main entry point for the application. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Program.cs" line="13" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Program.cs" bodystart="13" bodyend="18"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Program.cs" line="8" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Program.cs" bodystart="8" bodyend="19"/>
+    <listofallmembers>
+      <member refid="class_arvete_sisestaja_1_1_program_1a6d33aa859d318725900848f48fc37386" prot="private" virt="non-virtual"><scope>ArveteSisestaja::Program</scope><name>Main</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

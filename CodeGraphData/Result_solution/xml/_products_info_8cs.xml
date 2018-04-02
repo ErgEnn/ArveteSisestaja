@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.6">
+  <compounddef id="_products_info_8cs" kind="file">
+    <compoundname>ProductsInfo.cs</compoundname>
+    <innerclass refid="class_arvete_sisestaja_1_1_products_info" prot="public">ArveteSisestaja::ProductsInfo</innerclass>
+    <innernamespace refid="namespace_arvete_sisestaja">ArveteSisestaja</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System;</highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System.Collections.Generic;</highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System.Linq;</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System.Text;</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System.Threading.Tasks;</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">ArveteSisestaja<sp/>{</highlight></codeline>
+<codeline lineno="9" refid="class_arvete_sisestaja_1_1_products_info" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="class_arvete_sisestaja_1_1_products_info" kindref="compound">ProductsInfo</ref><sp/>{</highlight></codeline>
+<codeline lineno="10" refid="class_arvete_sisestaja_1_1_products_info_1a55eff3cad3185af7c5f7ce0b72a0e957" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal"><sp/>readonly<sp/>List&lt;Product&gt;<sp/><ref refid="class_arvete_sisestaja_1_1_products_info_1a55eff3cad3185af7c5f7ce0b72a0e957" kindref="member">_products</ref>;</highlight></codeline>
+<codeline lineno="11" refid="class_arvete_sisestaja_1_1_products_info_1a85629aa88e60d12171eab06d669fb1b8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal"><sp/>readonly<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_arvete_sisestaja_1_1_products_info_1a85629aa88e60d12171eab06d669fb1b8" kindref="member">_sumCalculated</ref>;</highlight></codeline>
+<codeline lineno="12" refid="class_arvete_sisestaja_1_1_products_info_1a19349d07a97e2ffeaa7d5492556f87a2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal"><sp/>readonly<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_arvete_sisestaja_1_1_products_info_1a19349d07a97e2ffeaa7d5492556f87a2" kindref="member">_sumOnInvoice</ref>;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14" refid="class_arvete_sisestaja_1_1_products_info_1a580ed886ff913b155dd1ab3dd7d5b6a2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="class_arvete_sisestaja_1_1_products_info_1a580ed886ff913b155dd1ab3dd7d5b6a2" kindref="member">ProductsInfo</ref>(List&lt;Product&gt;<sp/>tooted,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>summaArvel,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>summaArvutades)<sp/>{</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this._products<sp/>=<sp/>tooted;</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this._sumOnInvoice<sp/>=<sp/>summaArvel;</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this._sumCalculated<sp/>=<sp/>summaArvutades;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20" refid="class_arvete_sisestaja_1_1_products_info_1ac3c8ff9ac6f76b542a989efc182ed0ae" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/>List&lt;Product&gt;<sp/><ref refid="class_arvete_sisestaja_1_1_products_info_1ac3c8ff9ac6f76b542a989efc182ed0ae" kindref="member">GetProducts</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="class_arvete_sisestaja_1_1_products_info_1a55eff3cad3185af7c5f7ce0b72a0e957" kindref="member">_products</ref>;</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24" refid="class_arvete_sisestaja_1_1_products_info_1ae62e4db7825ddba40757d8a2918a6d2d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_arvete_sisestaja_1_1_products_info_1ae62e4db7825ddba40757d8a2918a6d2d" kindref="member">GetSumCalculated</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="class_arvete_sisestaja_1_1_products_info_1a85629aa88e60d12171eab06d669fb1b8" kindref="member">_sumCalculated</ref>;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28" refid="class_arvete_sisestaja_1_1_products_info_1ab9a7a2874ba41e49b60e02c3a72c4dd7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_arvete_sisestaja_1_1_products_info_1ab9a7a2874ba41e49b60e02c3a72c4dd7" kindref="member">GetSumInvoice</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="class_arvete_sisestaja_1_1_products_info_1a19349d07a97e2ffeaa7d5492556f87a2" kindref="member">_sumOnInvoice</ref>;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="32"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/ProductsInfo.cs"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.6">
+  <compounddef id="class_arvete_sisestaja_1_1_invoice" kind="class" prot="public">
+    <compoundname>ArveteSisestaja::Invoice</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1_invoice_1ab23238910a915656f040c500a04ae9c3" prot="private" static="no" mutable="no">
+        <type>string</type>
+        <definition>string ArveteSisestaja.Invoice._xmlText</definition>
+        <argsstring></argsstring>
+        <name>_xmlText</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" line="11" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" bodystart="11" bodyend="-1"/>
+        <referencedby refid="class_arvete_sisestaja_1_1_invoice_1a4622779b93b09e3900701e02a69f5805" compoundref="_invoice_8cs" startline="16" endline="20">ArveteSisestaja.Invoice.Invoice</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1_invoice_1a26b8378bae92844dac1d5a20659a82ea" prot="private" static="no" mutable="no">
+        <type>Screenshot</type>
+        <definition>Screenshot ArveteSisestaja.Invoice.screenshot</definition>
+        <argsstring></argsstring>
+        <name>screenshot</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" line="12" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" bodystart="12" bodyend="-1"/>
+        <referencedby refid="class_arvete_sisestaja_1_1_invoice_1aa1379df2defd73b6b782d8d41b5d69e8" compoundref="_invoice_8cs" startline="22" endline="25">ArveteSisestaja.Invoice.Invoice</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1_invoice_1a115b822cd5567627754a91d9f0ec23cb" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool ArveteSisestaja.Invoice._isValid</definition>
+        <argsstring></argsstring>
+        <name>_isValid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" line="13" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" bodystart="13" bodyend="-1"/>
+        <referencedby refid="class_arvete_sisestaja_1_1_invoice_1a8278a239a9a29aeb1422f0c8d06d6e2c" compoundref="_invoice_8cs" startline="27" endline="29">ArveteSisestaja.Invoice.IsValid</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1_invoice_1a155088da31fde19fb9ecb5923a4cd109" prot="private" static="no" mutable="no">
+        <type>XmlDocument</type>
+        <definition>XmlDocument ArveteSisestaja.Invoice._xml</definition>
+        <argsstring></argsstring>
+        <name>_xml</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" line="14" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" bodystart="14" bodyend="-1"/>
+        <referencedby refid="class_arvete_sisestaja_1_1_invoice_1aef4996f432d6ac4c5c50c1e63ab91fa6" compoundref="_invoice_8cs" startline="31" endline="33">ArveteSisestaja.Invoice.GetDate</referencedby>
+        <referencedby refid="class_arvete_sisestaja_1_1_invoice_1a4622779b93b09e3900701e02a69f5805" compoundref="_invoice_8cs" startline="16" endline="20">ArveteSisestaja.Invoice.Invoice</referencedby>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_arvete_sisestaja_1_1_invoice_1a4622779b93b09e3900701e02a69f5805" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ArveteSisestaja.Invoice.Invoice</definition>
+        <argsstring>(string xmlText)</argsstring>
+        <name>Invoice</name>
+        <param>
+          <type>string</type>
+          <declname>xmlText</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" line="16" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" bodystart="16" bodyend="20"/>
+        <references refid="class_arvete_sisestaja_1_1_invoice_1a155088da31fde19fb9ecb5923a4cd109" compoundref="_invoice_8cs" startline="14">ArveteSisestaja.Invoice._xml</references>
+        <references refid="class_arvete_sisestaja_1_1_invoice_1ab23238910a915656f040c500a04ae9c3" compoundref="_invoice_8cs" startline="11">ArveteSisestaja.Invoice._xmlText</references>
+      </memberdef>
+      <memberdef kind="function" id="class_arvete_sisestaja_1_1_invoice_1aa1379df2defd73b6b782d8d41b5d69e8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ArveteSisestaja.Invoice.Invoice</definition>
+        <argsstring>(Screenshot screenshot)</argsstring>
+        <name>Invoice</name>
+        <param>
+          <type>Screenshot</type>
+          <declname>screenshot</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" line="22" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" bodystart="22" bodyend="25"/>
+        <references refid="class_arvete_sisestaja_1_1_invoice_1a26b8378bae92844dac1d5a20659a82ea" compoundref="_invoice_8cs" startline="12">ArveteSisestaja.Invoice.screenshot</references>
+      </memberdef>
+      <memberdef kind="function" id="class_arvete_sisestaja_1_1_invoice_1a8278a239a9a29aeb1422f0c8d06d6e2c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool ArveteSisestaja.Invoice.IsValid</definition>
+        <argsstring>()</argsstring>
+        <name>IsValid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" line="27" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" bodystart="27" bodyend="29"/>
+        <references refid="class_arvete_sisestaja_1_1_invoice_1a115b822cd5567627754a91d9f0ec23cb" compoundref="_invoice_8cs" startline="13">ArveteSisestaja.Invoice._isValid</references>
+      </memberdef>
+      <memberdef kind="function" id="class_arvete_sisestaja_1_1_invoice_1aef4996f432d6ac4c5c50c1e63ab91fa6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>string ArveteSisestaja.Invoice.GetDate</definition>
+        <argsstring>()</argsstring>
+        <name>GetDate</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" line="31" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" bodystart="31" bodyend="33"/>
+        <references refid="class_arvete_sisestaja_1_1_invoice_1a155088da31fde19fb9ecb5923a4cd109" compoundref="_invoice_8cs" startline="14">ArveteSisestaja.Invoice._xml</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" line="10" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/Invoice.cs" bodystart="10" bodyend="34"/>
+    <listofallmembers>
+      <member refid="class_arvete_sisestaja_1_1_invoice_1a115b822cd5567627754a91d9f0ec23cb" prot="private" virt="non-virtual"><scope>ArveteSisestaja::Invoice</scope><name>_isValid</name></member>
+      <member refid="class_arvete_sisestaja_1_1_invoice_1a155088da31fde19fb9ecb5923a4cd109" prot="private" virt="non-virtual"><scope>ArveteSisestaja::Invoice</scope><name>_xml</name></member>
+      <member refid="class_arvete_sisestaja_1_1_invoice_1ab23238910a915656f040c500a04ae9c3" prot="private" virt="non-virtual"><scope>ArveteSisestaja::Invoice</scope><name>_xmlText</name></member>
+      <member refid="class_arvete_sisestaja_1_1_invoice_1aef4996f432d6ac4c5c50c1e63ab91fa6" prot="public" virt="non-virtual"><scope>ArveteSisestaja::Invoice</scope><name>GetDate</name></member>
+      <member refid="class_arvete_sisestaja_1_1_invoice_1a4622779b93b09e3900701e02a69f5805" prot="public" virt="non-virtual"><scope>ArveteSisestaja::Invoice</scope><name>Invoice</name></member>
+      <member refid="class_arvete_sisestaja_1_1_invoice_1aa1379df2defd73b6b782d8d41b5d69e8" prot="public" virt="non-virtual"><scope>ArveteSisestaja::Invoice</scope><name>Invoice</name></member>
+      <member refid="class_arvete_sisestaja_1_1_invoice_1a8278a239a9a29aeb1422f0c8d06d6e2c" prot="public" virt="non-virtual"><scope>ArveteSisestaja::Invoice</scope><name>IsValid</name></member>
+      <member refid="class_arvete_sisestaja_1_1_invoice_1a26b8378bae92844dac1d5a20659a82ea" prot="private" virt="non-virtual"><scope>ArveteSisestaja::Invoice</scope><name>screenshot</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

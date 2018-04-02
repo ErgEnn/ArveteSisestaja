@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.6">
+  <compounddef id="class_arvete_sisestaja_1_1_a_n_c_handler_1_1_cookie_aware_web_client" kind="class" prot="private">
+    <compoundname>ArveteSisestaja::ANCHandler::CookieAwareWebClient</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">WebClient</basecompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_arvete_sisestaja_1_1_a_n_c_handler_1_1_cookie_aware_web_client_1a93178a15178e008e86060b8109505050" prot="public" static="no" readable="no" writable="no" gettable="yes" settable="yes">
+        <type>CookieContainer</type>
+        <definition>CookieContainer ArveteSisestaja.ANCHandler.CookieAwareWebClient.CookieContainer</definition>
+        <argsstring></argsstring>
+        <name>CookieContainer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/ANCHandler.cs" line="115" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/ANCHandler.cs" bodystart="115" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_arvete_sisestaja_1_1_a_n_c_handler_1_1_cookie_aware_web_client_1a9b9b965fa9465062b0d7edff5ca2349a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ArveteSisestaja.ANCHandler.CookieAwareWebClient.CookieAwareWebClient</definition>
+        <argsstring>()</argsstring>
+        <name>CookieAwareWebClient</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/ANCHandler.cs" line="110" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/ANCHandler.cs" bodystart="110" bodyend="111"/>
+      </memberdef>
+      <memberdef kind="function" id="class_arvete_sisestaja_1_1_a_n_c_handler_1_1_cookie_aware_web_client_1adebac389a3f34e141b5839c4638a96ab" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ArveteSisestaja.ANCHandler.CookieAwareWebClient.CookieAwareWebClient</definition>
+        <argsstring>(CookieContainer c)</argsstring>
+        <name>CookieAwareWebClient</name>
+        <param>
+          <type><ref refid="class_arvete_sisestaja_1_1_a_n_c_handler_1_1_cookie_aware_web_client_1a93178a15178e008e86060b8109505050" kindref="member">CookieContainer</ref></type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/ANCHandler.cs" line="112" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/ANCHandler.cs" bodystart="112" bodyend="114"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="class_arvete_sisestaja_1_1_a_n_c_handler_1_1_cookie_aware_web_client_1af6bbae82b42898efe7d8eefd56af0360" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override WebRequest</type>
+        <definition>override WebRequest ArveteSisestaja.ANCHandler.CookieAwareWebClient.GetWebRequest</definition>
+        <argsstring>(Uri address)</argsstring>
+        <name>GetWebRequest</name>
+        <param>
+          <type>Uri</type>
+          <declname>address</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/ANCHandler.cs" line="117" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/ANCHandler.cs" bodystart="117" bodyend="127"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="5">
+        <label>WebClient</label>
+      </node>
+      <node id="4">
+        <label>ArveteSisestaja.ANCHandler.CookieAwareWebClient</label>
+        <link refid="class_arvete_sisestaja_1_1_a_n_c_handler_1_1_cookie_aware_web_client"/>
+        <childnode refid="5" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="7">
+        <label>WebClient</label>
+      </node>
+      <node id="6">
+        <label>ArveteSisestaja.ANCHandler.CookieAwareWebClient</label>
+        <link refid="class_arvete_sisestaja_1_1_a_n_c_handler_1_1_cookie_aware_web_client"/>
+        <childnode refid="7" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/ANCHandler.cs" line="109" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/ANCHandler.cs" bodystart="109" bodyend="128"/>
+    <listofallmembers>
+      <member refid="class_arvete_sisestaja_1_1_a_n_c_handler_1_1_cookie_aware_web_client_1a9b9b965fa9465062b0d7edff5ca2349a" prot="public" virt="non-virtual"><scope>ArveteSisestaja::ANCHandler::CookieAwareWebClient</scope><name>CookieAwareWebClient</name></member>
+      <member refid="class_arvete_sisestaja_1_1_a_n_c_handler_1_1_cookie_aware_web_client_1adebac389a3f34e141b5839c4638a96ab" prot="public" virt="non-virtual"><scope>ArveteSisestaja::ANCHandler::CookieAwareWebClient</scope><name>CookieAwareWebClient</name></member>
+      <member refid="class_arvete_sisestaja_1_1_a_n_c_handler_1_1_cookie_aware_web_client_1a93178a15178e008e86060b8109505050" prot="public" virt="non-virtual"><scope>ArveteSisestaja::ANCHandler::CookieAwareWebClient</scope><name>CookieContainer</name></member>
+      <member refid="class_arvete_sisestaja_1_1_a_n_c_handler_1_1_cookie_aware_web_client_1af6bbae82b42898efe7d8eefd56af0360" prot="protected" virt="non-virtual"><scope>ArveteSisestaja::ANCHandler::CookieAwareWebClient</scope><name>GetWebRequest</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

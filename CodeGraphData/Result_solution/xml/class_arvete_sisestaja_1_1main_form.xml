@@ -1,0 +1,363 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.6">
+  <compounddef id="class_arvete_sisestaja_1_1main_form" kind="class" prot="public">
+    <compoundname>ArveteSisestaja::mainForm</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">Form</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1main_form_1ae4adcb17cc1c1ecba339af68cd58a01b" prot="private" static="no" mutable="no">
+        <type>System.ComponentModel.IContainer</type>
+        <definition>System.ComponentModel.IContainer ArveteSisestaja.mainForm.components</definition>
+        <argsstring></argsstring>
+        <name>components</name>
+        <initializer>= null</initializer>
+        <briefdescription>
+<para>Required designer variable. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" line="6" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" bodystart="6" bodyend="-1"/>
+        <referencedby refid="class_arvete_sisestaja_1_1main_form_1a714b5e1c6abc4938a71c4f0cd48ff558" compoundref="main_form_8_designer_8cs" startline="12" endline="17">ArveteSisestaja.mainForm.Dispose</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1main_form_1aebdfd9118fc4e2a8b8da3f15c0d5f4fc" prot="private" static="no" mutable="no">
+        <type>System.Windows.Forms.DataGridView</type>
+        <definition>System.Windows.Forms.DataGridView ArveteSisestaja.mainForm.invoiceDataGrid</definition>
+        <argsstring></argsstring>
+        <name>invoiceDataGrid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" line="187" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" bodystart="187" bodyend="-1"/>
+        <referencedby refid="class_arvete_sisestaja_1_1main_form_1a1acb9eac3e6a02b71f80c6cd642f3315" compoundref="main_form_8_designer_8cs" startline="25" endline="184">ArveteSisestaja.mainForm.InitializeComponent</referencedby>
+        <referencedby refid="class_arvete_sisestaja_1_1main_form_1a1627350e0e6f54d415ae5c6029a23d40" compoundref="main_form_8cs" startline="18" endline="29">ArveteSisestaja.mainForm.mainForm_Load</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1main_form_1ac4d215f31dbda6fe2bc9718d648e6fcf" prot="private" static="no" mutable="no">
+        <type>System.Windows.Forms.DataGridViewCheckBoxColumn</type>
+        <definition>System.Windows.Forms.DataGridViewCheckBoxColumn ArveteSisestaja.mainForm.toAnc</definition>
+        <argsstring></argsstring>
+        <name>toAnc</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" line="188" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" bodystart="188" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1main_form_1a30457ac85f5fe67cfd6650686a375faa" prot="private" static="no" mutable="no">
+        <type>System.Windows.Forms.DataGridViewTextBoxColumn</type>
+        <definition>System.Windows.Forms.DataGridViewTextBoxColumn ArveteSisestaja.mainForm.vendor</definition>
+        <argsstring></argsstring>
+        <name>vendor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" line="189" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" bodystart="189" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1main_form_1a174805357db1eefbe6440eebd2cdbeea" prot="private" static="no" mutable="no">
+        <type>System.Windows.Forms.DataGridViewTextBoxColumn</type>
+        <definition>System.Windows.Forms.DataGridViewTextBoxColumn ArveteSisestaja.mainForm.invoiceNumber</definition>
+        <argsstring></argsstring>
+        <name>invoiceNumber</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" line="190" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" bodystart="190" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1main_form_1aac079a3d7e2b64a958fa63fa43c1a8d1" prot="private" static="no" mutable="no">
+        <type>System.Windows.Forms.DataGridViewTextBoxColumn</type>
+        <definition>System.Windows.Forms.DataGridViewTextBoxColumn ArveteSisestaja.mainForm.invoiceDate</definition>
+        <argsstring></argsstring>
+        <name>invoiceDate</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" line="191" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" bodystart="191" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1main_form_1a29acd3b9a1b6e51ea3bfdb554c5e1e8e" prot="private" static="no" mutable="no">
+        <type>System.Windows.Forms.DataGridViewTextBoxColumn</type>
+        <definition>System.Windows.Forms.DataGridViewTextBoxColumn ArveteSisestaja.mainForm.invoiceStatus</definition>
+        <argsstring></argsstring>
+        <name>invoiceStatus</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" line="192" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" bodystart="192" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1main_form_1a9ae3d2a50cf97a0add2395b053a05ae3" prot="private" static="no" mutable="no">
+        <type>System.Windows.Forms.DateTimePicker</type>
+        <definition>System.Windows.Forms.DateTimePicker ArveteSisestaja.mainForm.beginDateTimePicker</definition>
+        <argsstring></argsstring>
+        <name>beginDateTimePicker</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" line="193" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" bodystart="193" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1main_form_1a44c0b8177330fc3d5fccb1295ab16cf9" prot="private" static="no" mutable="no">
+        <type>System.Windows.Forms.DateTimePicker</type>
+        <definition>System.Windows.Forms.DateTimePicker ArveteSisestaja.mainForm.endDateTimePicker</definition>
+        <argsstring></argsstring>
+        <name>endDateTimePicker</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" line="194" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" bodystart="194" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1main_form_1ab7d1ea544e3d9f649e6b7594c7414538" prot="private" static="no" mutable="no">
+        <type>System.Windows.Forms.Button</type>
+        <definition>System.Windows.Forms.Button ArveteSisestaja.mainForm.loadInvoicesBtn</definition>
+        <argsstring></argsstring>
+        <name>loadInvoicesBtn</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" line="195" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" bodystart="195" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1main_form_1a5b8f30a24c71c850ea887f5a57ab47b8" prot="private" static="no" mutable="no">
+        <type>System.Windows.Forms.Button</type>
+        <definition>System.Windows.Forms.Button ArveteSisestaja.mainForm.uploadInvoices</definition>
+        <argsstring></argsstring>
+        <name>uploadInvoices</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" line="196" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" bodystart="196" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1main_form_1ad415fd663d6907736a72220a7377df68" prot="private" static="no" mutable="no">
+        <type>System.Windows.Forms.Label</type>
+        <definition>System.Windows.Forms.Label ArveteSisestaja.mainForm.label2</definition>
+        <argsstring></argsstring>
+        <name>label2</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" line="197" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" bodystart="197" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1main_form_1a361e88a7363fc997112fd4799ee6cfe0" prot="private" static="no" mutable="no">
+        <type>System.Windows.Forms.Label</type>
+        <definition>System.Windows.Forms.Label ArveteSisestaja.mainForm.label4</definition>
+        <argsstring></argsstring>
+        <name>label4</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" line="198" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" bodystart="198" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_arvete_sisestaja_1_1main_form_1a95cbe4ac75d5e5cbf3a3733ffaf2fea6" prot="private" static="no" mutable="no">
+        <type>System.Windows.Forms.ProgressBar</type>
+        <definition>System.Windows.Forms.ProgressBar ArveteSisestaja.mainForm.progressBar1</definition>
+        <argsstring></argsstring>
+        <name>progressBar1</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" line="199" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" bodystart="199" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_arvete_sisestaja_1_1main_form_1a6136c0e88b1440181814e897f39030b0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ArveteSisestaja.mainForm.mainForm</definition>
+        <argsstring>()</argsstring>
+        <name>mainForm</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.cs" line="14" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.cs" bodystart="14" bodyend="16"/>
+        <references refid="class_arvete_sisestaja_1_1main_form_1a1acb9eac3e6a02b71f80c6cd642f3315" compoundref="main_form_8_designer_8cs" startline="25" endline="184">ArveteSisestaja.mainForm.InitializeComponent</references>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_arvete_sisestaja_1_1main_form_1a1627350e0e6f54d415ae5c6029a23d40" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ArveteSisestaja.mainForm.mainForm_Load</definition>
+        <argsstring>(object sender, EventArgs e)</argsstring>
+        <name>mainForm_Load</name>
+        <param>
+          <type>object</type>
+          <declname>sender</declname>
+        </param>
+        <param>
+          <type>EventArgs</type>
+          <declname>e</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.cs" line="18" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.cs" bodystart="18" bodyend="29"/>
+        <references refid="class_arvete_sisestaja_1_1main_form_1aebdfd9118fc4e2a8b8da3f15c0d5f4fc" compoundref="main_form_8_designer_8cs" startline="187">ArveteSisestaja.mainForm.invoiceDataGrid</references>
+      </memberdef>
+      <memberdef kind="function" id="class_arvete_sisestaja_1_1main_form_1a98c2721ec69232ac088ca2579b850888" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ArveteSisestaja.mainForm.loadInvoicesBtn_Click</definition>
+        <argsstring>(object sender, EventArgs e)</argsstring>
+        <name>loadInvoicesBtn_Click</name>
+        <param>
+          <type>object</type>
+          <declname>sender</declname>
+        </param>
+        <param>
+          <type>EventArgs</type>
+          <declname>e</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.cs" line="31" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.cs" bodystart="31" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="class_arvete_sisestaja_1_1main_form_1a1acb9eac3e6a02b71f80c6cd642f3315" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ArveteSisestaja.mainForm.InitializeComponent</definition>
+        <argsstring>()</argsstring>
+        <name>InitializeComponent</name>
+        <briefdescription>
+<para>Required method for Designer support - do not modify the contents of this method with the code editor. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" line="25" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" bodystart="25" bodyend="184"/>
+        <references refid="class_arvete_sisestaja_1_1main_form_1aebdfd9118fc4e2a8b8da3f15c0d5f4fc" compoundref="main_form_8_designer_8cs" startline="187">ArveteSisestaja.mainForm.invoiceDataGrid</references>
+        <referencedby refid="class_arvete_sisestaja_1_1main_form_1a6136c0e88b1440181814e897f39030b0" compoundref="main_form_8cs" startline="14" endline="16">ArveteSisestaja.mainForm.mainForm</referencedby>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="class_arvete_sisestaja_1_1main_form_1a714b5e1c6abc4938a71c4f0cd48ff558" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override void</type>
+        <definition>override void ArveteSisestaja.mainForm.Dispose</definition>
+        <argsstring>(bool disposing)</argsstring>
+        <name>Dispose</name>
+        <param>
+          <type>bool</type>
+          <declname>disposing</declname>
+        </param>
+        <briefdescription>
+<para>Clean up any resources being used. </para>        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>disposing</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>true if managed resources should be disposed; otherwise, false.</para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" line="12" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.Designer.cs" bodystart="12" bodyend="17"/>
+        <references refid="class_arvete_sisestaja_1_1main_form_1ae4adcb17cc1c1ecba339af68cd58a01b" compoundref="main_form_8_designer_8cs" startline="6">ArveteSisestaja.mainForm.components</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="14">
+        <label>ArveteSisestaja.mainForm</label>
+        <link refid="class_arvete_sisestaja_1_1main_form"/>
+        <childnode refid="15" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>Form</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="16">
+        <label>ArveteSisestaja.mainForm</label>
+        <link refid="class_arvete_sisestaja_1_1main_form"/>
+        <childnode refid="17" relation="public-inheritance">
+        </childnode>
+        <childnode refid="18" relation="usage">
+          <edgelabel>invoiceNumber</edgelabel>
+          <edgelabel>label2</edgelabel>
+          <edgelabel>label4</edgelabel>
+          <edgelabel>invoiceDataGrid</edgelabel>
+          <edgelabel>beginDateTimePicker</edgelabel>
+          <edgelabel>invoiceDate</edgelabel>
+          <edgelabel>toAnc</edgelabel>
+          <edgelabel>components</edgelabel>
+          <edgelabel>progressBar1</edgelabel>
+          <edgelabel>vendor</edgelabel>
+          <edgelabel>...</edgelabel>
+        </childnode>
+      </node>
+      <node id="17">
+        <label>Form</label>
+      </node>
+      <node id="18">
+        <label>System</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.cs" line="12" column="1" bodyfile="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/mainForm.cs" bodystart="12" bodyend="34"/>
+    <listofallmembers>
+      <member refid="class_arvete_sisestaja_1_1main_form_1a9ae3d2a50cf97a0add2395b053a05ae3" prot="private" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>beginDateTimePicker</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1ae4adcb17cc1c1ecba339af68cd58a01b" prot="private" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>components</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1a714b5e1c6abc4938a71c4f0cd48ff558" prot="protected" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>Dispose</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1a44c0b8177330fc3d5fccb1295ab16cf9" prot="private" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>endDateTimePicker</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1a1acb9eac3e6a02b71f80c6cd642f3315" prot="private" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>InitializeComponent</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1aebdfd9118fc4e2a8b8da3f15c0d5f4fc" prot="private" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>invoiceDataGrid</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1aac079a3d7e2b64a958fa63fa43c1a8d1" prot="private" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>invoiceDate</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1a174805357db1eefbe6440eebd2cdbeea" prot="private" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>invoiceNumber</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1a29acd3b9a1b6e51ea3bfdb554c5e1e8e" prot="private" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>invoiceStatus</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1ad415fd663d6907736a72220a7377df68" prot="private" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>label2</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1a361e88a7363fc997112fd4799ee6cfe0" prot="private" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>label4</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1ab7d1ea544e3d9f649e6b7594c7414538" prot="private" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>loadInvoicesBtn</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1a98c2721ec69232ac088ca2579b850888" prot="private" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>loadInvoicesBtn_Click</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1a6136c0e88b1440181814e897f39030b0" prot="public" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>mainForm</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1a1627350e0e6f54d415ae5c6029a23d40" prot="private" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>mainForm_Load</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1a95cbe4ac75d5e5cbf3a3733ffaf2fea6" prot="private" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>progressBar1</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1ac4d215f31dbda6fe2bc9718d648e6fcf" prot="private" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>toAnc</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1a5b8f30a24c71c850ea887f5a57ab47b8" prot="private" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>uploadInvoices</name></member>
+      <member refid="class_arvete_sisestaja_1_1main_form_1a30457ac85f5fe67cfd6650686a375faa" prot="private" virt="non-virtual"><scope>ArveteSisestaja::mainForm</scope><name>vendor</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

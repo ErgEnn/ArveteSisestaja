@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.6">
+  <compounddef id="namespace_arvete_sisestaja" kind="namespace">
+    <compoundname>ArveteSisestaja</compoundname>
+    <innerclass refid="class_arvete_sisestaja_1_1_a_n_c_handler" prot="public">ArveteSisestaja::ANCHandler</innerclass>
+    <innerclass refid="class_arvete_sisestaja_1_1_definition" prot="public">ArveteSisestaja::Definition</innerclass>
+    <innerclass refid="class_arvete_sisestaja_1_1_definitions_handler" prot="public">ArveteSisestaja::DefinitionsHandler</innerclass>
+    <innerclass refid="class_arvete_sisestaja_1_1_invoice" prot="public">ArveteSisestaja::Invoice</innerclass>
+    <innerclass refid="class_arvete_sisestaja_1_1main_form" prot="public">ArveteSisestaja::mainForm</innerclass>
+    <innerclass refid="class_arvete_sisestaja_1_1_omniva_handler" prot="public">ArveteSisestaja::OmnivaHandler</innerclass>
+    <innerclass refid="class_arvete_sisestaja_1_1_product" prot="public">ArveteSisestaja::Product</innerclass>
+    <innerclass refid="class_arvete_sisestaja_1_1_products_info" prot="public">ArveteSisestaja::ProductsInfo</innerclass>
+    <innerclass refid="class_arvete_sisestaja_1_1_program" prot="public">ArveteSisestaja::Program</innerclass>
+    <innernamespace refid="namespace_arvete_sisestaja_1_1_properties">ArveteSisestaja::Properties</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/Ergo/Documents/Visual Studio 2017/Projects/ArveteSisestaja/ArveteSisestaja/ANCHandler.cs" line="11" column="1"/>
+  </compounddef>
+</doxygen>
