@@ -114,7 +114,24 @@ namespace ArveteSisestaja {
 		}
 
 		private void uploadInvoices_Click(object sender, EventArgs e) {
-			DialogResult dialogResult=DialogResult.OK;
+			List<String> allInvalidProducts = new List<String>();
+			foreach (DataGridViewRow row in invoiceDataGrid.Rows) {
+				if ((bool) row.Cells[0].Value) {
+					Invoice invoice = invoices.Where(i => i.GetInvoiceNumber() == row.Cells[2].Value.ToString()).First();
+					List<Product> invalidProducts = invoice.ParseProducts();
+					if (invalidProducts.Count > 0) {
+						foreach (Product invalidProduct in invalidProducts) {
+							if (!allInvalidProducts.Contains(invalidProduct.GetName())) {
+								allInvalidProducts.Add(invalidProduct.GetName());
+							}
+						}
+					}
+				}
+			}
+			MessageBox.Show("Tundmatuid tooteid: " + allInvalidProducts.Count);
+
+
+			DialogResult dialogResult = DialogResult.OK;
 			int totalInvalidProducts = 0;
 			List<Invoice> toBeUploadedInvoices = new List<Invoice>();
 			foreach (DataGridViewRow row in invoiceDataGrid.Rows) {

@@ -20,6 +20,7 @@ namespace ArveteSisestaja {
 		public BackgroundWorker AncUploaderWorker;
 
 		public ANCHandler() {
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 			AncIngredientsLoader = new BackgroundWorker();
 			AncIngredientsLoader.DoWork += new DoWorkEventHandler(LoadIngredients);
 			AncUploadedInvoicesLoader = new BackgroundWorker();

@@ -59,6 +59,7 @@ namespace ArveteSisestaja {
 			this.screenshot = screenshot;
 			screenshot.SaveAsFile($"VIGASED/ERROR_{DateTime.Now:yyyy_MM_dd_HH_mm_ssff}.png");
 			this._isValid = false;
+			this._toBeUploaded = false;
 		}
 
 		public bool IsValid() {
@@ -107,14 +108,14 @@ namespace ArveteSisestaja {
 		}
 
 		public Color GetColor() {
+			if(_vendor == "VIGANE") {
+				return Color.DarkRed;
+			}
 			if(_isAlreadyUploaded) {
 				return Color.LightSkyBlue;
 			}
 			if(!_isUploadable) {
 				return Color.Yellow;
-			}
-			if(!_isValid) {
-				return Color.DarkRed;
 			}
 			return Color.LightGreen;
 		}
