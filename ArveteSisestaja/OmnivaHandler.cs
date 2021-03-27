@@ -46,7 +46,7 @@ namespace ArveteSisestaja {
 				wait.Until(ExpectedConditions.ElementExists(By.Id("username")));
 				chromeDriver.FindElementById("username").SendKeys(SettingsHandler.GetSetting(SettingsHandler.SETTING.OMNIVA_USERNAME)); // Enter username
 				chromeDriver.FindElementById("password").SendKeys(SettingsHandler.GetSetting(SettingsHandler.SETTING.OMNIVA_PASSWORD)); // Enter password
-				chromeDriver.FindElementByXPath("/html/body/div/div[2]/div/form/div[5]/a").Click(); // Submit
+				chromeDriver.FindElementByXPath("//*[@id=\"userPasswordLoginForm\"]/div[7]/a").Click(); // Submit
 				//By.XPath("/html/body/div[1]/div[4]/div[2]/div/div/div[1]/div/div[2]/eak-menu/div/div/ul/li[2]/a")
 				//wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("/html/body/div[1]/div[4]/div[2]/div/div/div[1]/div/div[2]/eak-menu/div/div/ul/li[2]/a"))); //Wait for everything to load
 				//wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.ClassName("loading-overlay")));

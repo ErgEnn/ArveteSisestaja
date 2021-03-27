@@ -128,6 +128,10 @@ namespace ArveteSisestaja {
 					}
 				}
 			}
+			foreach (string invalidProduct in allInvalidProducts)
+            {
+                Console.WriteLine(invalidProduct);
+            }
 			MessageBox.Show("Tundmatuid tooteid: " + allInvalidProducts.Count);
 
 
