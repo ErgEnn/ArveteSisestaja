@@ -11,9 +11,11 @@ namespace ArveteSisestaja {
 		public DefinitionsForm(Product product) {
 			InitializeComponent();
 			this._product = product;
-			this.itemNameLabel.Text = product.GetName()+"   |   "+product.GetAmount();
+			this.itemNameLabel.Text = product.Name;
+			this.amountLbl.Text = product.Amount;
+			this.multiplierTextBox.Text = "1";
 			this.definitionsListBox.Items.Clear();
-			this.definitionsListBox.Items.AddRange(DefinitionsHandler.GetANCIngredients().Keys.ToArray());
+			this.definitionsListBox.Items.AddRange(DefinitionsHandler.AncIngredients.Keys.ToArray());
 			this.searchBox.Focus();
 			this.ActiveControl = searchBox;
 		}
@@ -24,14 +26,14 @@ namespace ArveteSisestaja {
 				MessageBox.Show("Nimetus on valimata!");
 				return;
 			}
-			this._product.definition = DefinitionsHandler.AddDefinition(_product, selectedItem.ToString(), this.multiplierTextBox.Text);
+			this._product.Definition = DefinitionsHandler.AddDefinition(_product, selectedItem.ToString(), int.Parse(this.multiplierTextBox.Text)*(_product.Definition.AncIngredient.IsAltered?1000:1));
 			this.DialogResult = DialogResult.OK;
 			Close();
 		}
 
 		private void searchBox_TextChanged(object sender, EventArgs e) {
 			this.definitionsListBox.Items.Clear();
-			Dictionary<string, int> anc = DefinitionsHandler.GetANCIngredients();
+			Dictionary<string, Ingredient> anc = DefinitionsHandler.AncIngredients;
 			if (searchBox.Text == "") {
 				this.definitionsListBox.Items.AddRange(anc.Keys.ToArray());
 			} else {
@@ -62,9 +64,26 @@ namespace ArveteSisestaja {
 		}
 
 		private void DefinitionsForm_FormClosing(object sender, FormClosingEventArgs e) {
-			if (this.DialogResult!=DialogResult.OK) {
+			if (this.DialogResult!=DialogResult.OK && this.DialogResult!=DialogResult.Ignore) {
 				this.DialogResult = DialogResult.Abort;
 			}
+		}
+
+		private void skipBtn_Click(object sender, EventArgs e)
+		{
+			this.DialogResult = DialogResult.Ignore;
+			Close();
+		}
+
+		private void definitionsListBox_SelectedValueChanged(object sender, EventArgs e)
+		{
+			if (string.IsNullOrWhiteSpace(definitionsListBox.Text))
+			{
+				this.unitLbl.Text = "g";
+			}
+			this.unitLbl.Text = DefinitionsHandler.AncIngredients[definitionsListBox.Text].IsAltered
+				? DefinitionsHandler.AncIngredients[definitionsListBox.Text].Unit
+				: "g";
 		}
 	}
 }

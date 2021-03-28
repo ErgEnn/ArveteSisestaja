@@ -66,7 +66,7 @@ namespace ArveteSisestaja {
 		}
 
 		private void AncIngredientsLoaderOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs) {
-			DefinitionsHandler.LoadDefinitions((Dictionary<string, int>) runWorkerCompletedEventArgs.Result);
+			DefinitionsHandler.LoadDefinitions((Dictionary<string, Ingredient>) runWorkerCompletedEventArgs.Result);
 			_ancHandler.AncUploadedInvoicesLoader.RunWorkerAsync(new List<object> { beginDateTimePicker.Value, endDateTimePicker.Value });
 		}
 
@@ -114,6 +114,7 @@ namespace ArveteSisestaja {
 		}
 
 		private void uploadInvoices_Click(object sender, EventArgs e) {
+			_ancHandler.AncIngredientsLoader.RunWorkerAsync();
 			List<String> allInvalidProducts = new List<String>();
 			foreach (DataGridViewRow row in invoiceDataGrid.Rows) {
 				if ((bool) row.Cells[0].Value) {
@@ -121,8 +122,8 @@ namespace ArveteSisestaja {
 					List<Product> invalidProducts = invoice.ParseProducts();
 					if (invalidProducts.Count > 0) {
 						foreach (Product invalidProduct in invalidProducts) {
-							if (!allInvalidProducts.Contains(invalidProduct.GetName())) {
-								allInvalidProducts.Add(invalidProduct.GetName());
+							if (!allInvalidProducts.Contains(invalidProduct.Name)) {
+								allInvalidProducts.Add(invalidProduct.Name);
 							}
 						}
 					}
@@ -149,12 +150,18 @@ namespace ArveteSisestaja {
 							if (dialogResult == DialogResult.Abort) {
 								break;
 							}
+
+							if (dialogResult == DialogResult.Ignore)
+							{
+								Console.WriteLine($"[SKIPPED]: {invalidProduct.Name} | Kogus arvel: {invalidProduct.Amount}");
+							}
 						}
 					} else {
 						toBeUploadedInvoices.Add(invoice);
 					}
 				}
-				if (dialogResult == DialogResult.Abort) {
+				if (dialogResult == DialogResult.Abort)
+				{
 					break;
 				}
 			}
@@ -180,6 +187,36 @@ namespace ArveteSisestaja {
 		private void invoiceDataGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
 			if (invoices != null) {
 				invoices.Where(invoice => invoice.GetInvoiceNumber() == invoiceDataGrid.Rows[e.RowIndex].Cells[2].Value.ToString()).First().SetToBeUploaded((bool) invoiceDataGrid.Rows[e.RowIndex].Cells[0].Value);
+			}
+		}
+
+		private void generatePriaReport_Click(object sender, EventArgs e) {
+			using (var generator = new PriaReport())
+			{
+				foreach (var invoice in invoices)
+				{
+					foreach (var product in invoice.GetProducts())
+					{
+						if (product.Definition is null)
+						{
+							var dialogResult = new DefinitionsForm(product).ShowDialog();
+							if (dialogResult == DialogResult.Abort)
+							{
+								break;
+							}
+
+							if (dialogResult == DialogResult.Ignore)
+							{
+								Console.WriteLine($"[SKIPPED]: {product.Name} | Kogus arvel: {product.Amount}");
+								continue;
+							}
+						}
+						if(product.Definition.AncIngredient.Name.Contains("Piim 2"))
+							generator.AddMilk(invoice, product);
+						if (product.Definition.AncIngredient.Name.Contains("Marjad (külmutatud)"))
+							generator.AddBerry(invoice, product);
+					}
+				}
 			}
 		}
 	}

@@ -37,6 +37,7 @@
 			this.label2 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this.mainProgressBar = new System.Windows.Forms.ProgressBar();
+			this.generatePriaReport = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.invoiceDataGrid)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -161,11 +162,22 @@
 			this.mainProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
 			this.mainProgressBar.TabIndex = 10;
 			// 
+			// generatePriaReport
+			// 
+			this.generatePriaReport.Location = new System.Drawing.Point(12, 538);
+			this.generatePriaReport.Name = "generatePriaReport";
+			this.generatePriaReport.Size = new System.Drawing.Size(669, 23);
+			this.generatePriaReport.TabIndex = 11;
+			this.generatePriaReport.Text = "Genereeri PRIA andmete fail";
+			this.generatePriaReport.UseVisualStyleBackColor = true;
+			this.generatePriaReport.Click += new System.EventHandler(this.generatePriaReport_Click);
+			// 
 			// mainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(693, 537);
+			this.ClientSize = new System.Drawing.Size(693, 574);
+			this.Controls.Add(this.generatePriaReport);
 			this.Controls.Add(this.mainProgressBar);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.label2);
@@ -198,6 +210,7 @@
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.ProgressBar mainProgressBar;
+		private System.Windows.Forms.Button generatePriaReport;
 	}
 }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,19 +12,22 @@ namespace ArveteSisestaja {
 
 		private static readonly string _filedir = "definitions.csv";
 		private static Dictionary<string, Definition> _definitions;
-		private static Dictionary<string, int> _ancIngredients;
+		public static Dictionary<string, Ingredient> AncIngredients { get; set; }
 
-		public static void LoadDefinitions(Dictionary<string,int> ancIngredients) {
+		public static void LoadDefinitions(Dictionary<string,Ingredient> ancIngredients) {
 			_definitions = new Dictionary<string, Definition>();
-			_ancIngredients = ancIngredients;
+			AncIngredients = ancIngredients;
 
 			if (File.Exists(_filedir)) {
 				string[] lines = File.ReadAllLines(_filedir);
 				foreach (string line in lines) {
 					string[] vals = line.Split(';');// product name; ANC name; [amount multiplier]
-					if (ancIngredients.ContainsKey(vals[1]) && !_definitions.ContainsKey(vals[0])) {
+					string productName =string.Join(";",vals.TakeWhile((_, i) => i<vals.Length-2));
+					string ancName = vals[vals.Length-2];
+					decimal multiplier = decimal.Parse(vals[vals.Length-1], CultureInfo.GetCultureInfo("de-DE"));
+					if (ancIngredients.ContainsKey(ancName) && !_definitions.ContainsKey(productName)) {
 						try {
-							_definitions.Add(vals[0], new Definition(vals[1], vals[2], ancIngredients[vals[1]]));
+							_definitions.Add(productName, new Definition(ancIngredients[ancName],multiplier));
 						} catch (Exception e) {
 							Console.WriteLine("ERROR definitsiooni laadimisel!");
 						}
@@ -40,20 +44,17 @@ namespace ArveteSisestaja {
 			return null;
 		}
 
-		public static Definition AddDefinition(Product product, string ancName, string multiplier) {
-			if (GetDefinition(product.GetName()) == null) { 
-				Definition newDefinition = new Definition(ancName, multiplier, _ancIngredients[ancName]);
-				_definitions.Add(product.GetName(), newDefinition);
-				File.AppendAllText(_filedir, product.GetName() + ";" + ancName + ";" + multiplier + "\n");
+		public static Definition AddDefinition(Product product,string ancName, int multiplier) {
+			if (GetDefinition(product.Name) == null)
+			{
+				Ingredient ingredient = AncIngredients[ancName];
+				Definition newDefinition = new Definition(ingredient,multiplier);
+				_definitions.Add(product.Name, newDefinition);
+				File.AppendAllText(_filedir, product.Name + ";" + ancName + ";" + multiplier + "\n");
 				return newDefinition;
 			}
-			return GetDefinition(product.GetName());
+			return GetDefinition(product.Name);
 
-		}
-
-
-		public static Dictionary<string, int> GetANCIngredients() {
-			return _ancIngredients;
 		}
 	}
 }

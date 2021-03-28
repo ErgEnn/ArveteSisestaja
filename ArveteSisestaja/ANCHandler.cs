@@ -7,9 +7,11 @@ using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using HtmlAgilityPack;
+using Newtonsoft.Json;
 
 namespace ArveteSisestaja {
 	public class ANCHandler {
@@ -41,23 +43,37 @@ namespace ArveteSisestaja {
 
 		public void LoadIngredients(object sender, DoWorkEventArgs args) {
 			string page = cawc.DownloadString("https://www.anckonsult.eu/?class=product&do=add_new");
-			Dictionary<string, int> ingredients = new Dictionary<string, int>();
-			ingredients.Add("!!!ÄRA SISESTA ANCsse!!!", 0);
+			Dictionary<string, Ingredient> ingredients = new Dictionary<string, Ingredient>();
+			ingredients.Add("!!!ÄRA SISESTA ANCsse!!!", new Ingredient(0, "!!!ÄRA SISESTA ANCsse!!!"));
 			HtmlDocument html = new HtmlDocument();
 			html.LoadHtml(page);
 			HtmlNodeCollection nodes = html.GetElementbyId("ingredient_list").ChildNodes;
 			foreach(var node in nodes) {
 				if(node.Name == "option" && Int32.Parse(node.Attributes["value"].Value) != 0) {
 					try {
-						int value = Int32.Parse(node.Attributes["value"].Value);
-						string key = Encoding.UTF8.GetString(Encoding.Default.GetBytes(node.InnerText));
-						ingredients.Add(key, value);
+						int id = Int32.Parse(node.Attributes["value"].Value);
+						string name = Encoding.UTF8.GetString(Encoding.Default.GetBytes(node.InnerText));
+						ingredients.Add(name, new Ingredient(id,name));
 					} catch (Exception e) {
 						MessageBox.Show("ANC kauba nimede laadimise viga!", "ERROR");
 						Console.WriteLine("ANC laadimise viga!");
 					}
 				}
 			}
+			string script = html.DocumentNode.Descendants()
+				.Where(node => node.Name == "script" && node.InnerText.Contains("var pieces")).Single().InnerText;
+			Regex regex = new Regex("var pieces2 = ({(?>(?>(?>\\d+):(?>\\d+\\.\\d+)),?\\W?)+)");
+			var alteredIngredients = JsonConvert.DeserializeObject<Dictionary<int, decimal>>(regex.Match(script).Groups[1].Value);
+			alteredIngredients.Join(ingredients,
+				alt => alt.Key,
+				ingr => ingr.Value.Id,
+				(alt, ingr) =>
+				{
+					ingr.Value.UnitCoefficient = alt.Value;
+					ingr.Value.Unit = "tk";
+					Console.WriteLine($"Lisainfo: {ingr.Key}");
+					return ingr;
+				}).ToArray();
 			Console.WriteLine("Laetud " + ingredients.Count + " toote nimetust");
 			args.Result = ingredients;
 		}
@@ -81,9 +97,9 @@ namespace ArveteSisestaja {
 						nvc.Add("date", invoice.GetDate().ToString("dd.MM.yyyy"));
 						nvc.Add("vendor", invoice.GetVendor());
 						nvc.Add("vendors_menu", "");
-						nvc.Add("ingredient", product.definition.ancIndex.ToString());
+						nvc.Add("ingredient", product.Definition.AncIngredient.ToString());
 						nvc.Add("ingredient_list", "");
-						nvc.Add("total_price", product.GetPrice());
+						nvc.Add("total_price", product.PriceBeforeVat);
 						nvc.Add("vat", "20");
 						nvc.Add("amount", product.GetAdjustedAmount());
 						nvc.Add("deadline", "");

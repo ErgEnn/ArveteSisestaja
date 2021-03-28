@@ -7,25 +7,15 @@ using System.Threading.Tasks;
 
 namespace ArveteSisestaja {
 	public class Product {
-		string _name;
-		string _amount;
-		string _price;
-		public Definition definition { get; set; }
-		public Product(string name, string amount, string price,Definition definition) {
-			this._name = name;
-			this._amount = amount;
-			this._price = price;
-			this.definition = definition;
-		}
-
-		public string GetName() {
-			return this._name;
-		}
-		public string GetAmount() {
-			return this._amount;
-		}
-		public string GetPrice() {
-			return this._price;
+		public string Name { get; }
+		public string Amount { get; }
+		public string PriceBeforeVat { get; }
+		public Definition Definition { get; set; }
+		public Product(string name, string amount, string priceBeforeVat,Definition definition) {
+			Name = name;
+			Amount = amount;
+			PriceBeforeVat = priceBeforeVat;
+			Definition = definition;
 		}
 
 		private string GetFixedLengthString(string s, int lenght=15) {
@@ -36,12 +26,12 @@ namespace ArveteSisestaja {
 		}
 
 		public override string ToString() {
-			return $"{GetFixedLengthString(_name)}    {_price} €    {_amount}    {GetFixedLengthString(definition.ToString())}";
+			return $"{GetFixedLengthString(Name)}    {PriceBeforeVat} €    {Amount}    {GetFixedLengthString(Definition.ToString())}";
 		}
 
 		public string GetAdjustedAmount() {
-			var am = decimal.Parse(_amount,CultureInfo.InvariantCulture);
-			var mu = decimal.Parse(definition.multiplier, CultureInfo.InvariantCulture);
+			var am = decimal.Parse(Amount,CultureInfo.InvariantCulture);
+			var mu = Definition.Multiplier;
 			var mul = decimal.Multiply(am, mu);
 			var div = decimal.Divide(mul, 1000);
 			string s = div.ToString(CultureInfo.GetCultureInfo("de-DE"));
