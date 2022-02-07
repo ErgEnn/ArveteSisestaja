@@ -21,8 +21,8 @@ namespace ArveteSisestaja {
 
 
 		private void mainForm_Load(object sender, EventArgs e) {
-			beginDateTimePicker.Value = DateTime.Today.AddMonths(-1);
-			endDateTimePicker.Value = DateTime.Today;
+			beginDateTimePicker.Value = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+			endDateTimePicker.Value = beginDateTimePicker.Value.AddMonths(1).AddDays(-1);
 			SettingsHandler.LoadSettings();
 			if (Directory.Exists("VIGASED")) {
 				Directory.Delete("VIGASED",true);
@@ -193,7 +193,7 @@ namespace ArveteSisestaja {
 		private void generatePriaReport_Click(object sender, EventArgs e) {
 			using (var generator = new PriaReport())
 			{
-				foreach (var invoice in invoices)
+				foreach (var invoice in invoices.OrderBy(invoice => invoice.GetDate()))
 				{
 					foreach (var product in invoice.GetProducts())
 					{
@@ -211,10 +211,18 @@ namespace ArveteSisestaja {
 								continue;
 							}
 						}
-						if(product.Definition.AncIngredient.Name.Contains("Piim 2"))
-							generator.AddMilk(invoice, product);
-						if (product.Definition.AncIngredient.Name.Contains("Marjad (külmutatud)"))
-							generator.AddBerry(invoice, product);
+						if(product.Definition.AncIngredient.Name.Contains("Piim 3"))
+							generator.AddRow("Piim",invoice, product);
+						if (product.Definition.AncIngredient.Name.Contains("Keefir"))
+							generator.AddRow("Keefir",invoice, product);
+						if (product.Definition.AncIngredient.Name == "Õun")
+							generator.AddRow("Õun",invoice, product);
+						if (product.Definition.AncIngredient.Name == "Pirn")
+							generator.AddRow("Pirn", invoice, product);
+						if (product.Definition.AncIngredient.Name == "Nuikapsas")
+							generator.AddRow("Nuikapsas",invoice, product);
+						if (product.Definition.AncIngredient.Name == "Marjad (külmutatud)")
+							generator.AddRow("Marjad",invoice, product);
 					}
 				}
 			}

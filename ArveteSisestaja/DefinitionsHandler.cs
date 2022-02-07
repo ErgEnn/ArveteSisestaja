@@ -38,8 +38,8 @@ namespace ArveteSisestaja {
 		}
 
 		public static Definition GetDefinition(string productName) {
-			if (_definitions.ContainsKey(productName)) {
-				return _definitions[productName];
+			if (_definitions.ContainsKey(productName.Replace(Environment.NewLine, ""))) {
+				return _definitions[productName.Replace(Environment.NewLine, "")];
 			}
 			return null;
 		}
@@ -49,11 +49,11 @@ namespace ArveteSisestaja {
 			{
 				Ingredient ingredient = AncIngredients[ancName];
 				Definition newDefinition = new Definition(ingredient,multiplier);
-				_definitions.Add(product.Name, newDefinition);
-				File.AppendAllText(_filedir, product.Name + ";" + ancName + ";" + multiplier + "\n");
+				_definitions.Add(product.Name.Replace(Environment.NewLine, ""), newDefinition);
+				File.AppendAllText(_filedir, product.Name.Replace(Environment.NewLine, "") + ";" + ancName + ";" + multiplier + "\n");
 				return newDefinition;
 			}
-			return GetDefinition(product.Name);
+			return GetDefinition(product.Name.Replace(Environment.NewLine, ""));
 
 		}
 	}

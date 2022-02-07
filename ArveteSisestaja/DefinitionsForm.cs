@@ -13,7 +13,7 @@ namespace ArveteSisestaja {
 			this._product = product;
 			this.itemNameLabel.Text = product.Name;
 			this.amountLbl.Text = product.Amount;
-			this.multiplierTextBox.Text = "1";
+			this.multiplierTextBox.Text = "1000";
 			this.definitionsListBox.Items.Clear();
 			this.definitionsListBox.Items.AddRange(DefinitionsHandler.AncIngredients.Keys.ToArray());
 			this.searchBox.Focus();
@@ -26,7 +26,7 @@ namespace ArveteSisestaja {
 				MessageBox.Show("Nimetus on valimata!");
 				return;
 			}
-			this._product.Definition = DefinitionsHandler.AddDefinition(_product, selectedItem.ToString(), int.Parse(this.multiplierTextBox.Text)*(_product.Definition.AncIngredient.IsAltered?1000:1));
+			this._product.Definition = DefinitionsHandler.AddDefinition(_product, selectedItem.ToString(), int.Parse(this.multiplierTextBox.Text)*(DefinitionsHandler.AncIngredients[selectedItem.ToString()].IsAltered?1000:1));
 			this.DialogResult = DialogResult.OK;
 			Close();
 		}
@@ -79,11 +79,14 @@ namespace ArveteSisestaja {
 		{
 			if (string.IsNullOrWhiteSpace(definitionsListBox.Text))
 			{
+				this.multiplierTextBox.Text = "1000";
 				this.unitLbl.Text = "g";
+				return;
 			}
 			this.unitLbl.Text = DefinitionsHandler.AncIngredients[definitionsListBox.Text].IsAltered
 				? DefinitionsHandler.AncIngredients[definitionsListBox.Text].Unit
 				: "g";
+			this.multiplierTextBox.Text = DefinitionsHandler.AncIngredients[definitionsListBox.Text].IsAltered?"1":"1000";
 		}
 	}
 }

@@ -92,21 +92,31 @@ namespace ArveteSisestaja {
 				if(invoice.IsValid()) {
 					List<Product> products = invoice.GetProducts();
 					foreach (Product product in products) {
-						NameValueCollection nvc = new NameValueCollection();
-						nvc.Add("invoice", invoice.GetInvoiceNumber());
-						nvc.Add("date", invoice.GetDate().ToString("dd.MM.yyyy"));
-						nvc.Add("vendor", invoice.GetVendor());
-						nvc.Add("vendors_menu", "");
-						nvc.Add("ingredient", product.Definition.AncIngredient.ToString());
-						nvc.Add("ingredient_list", "");
-						nvc.Add("total_price", product.PriceBeforeVat);
-						nvc.Add("vat", "20");
-						nvc.Add("amount", product.GetAdjustedAmount());
-						nvc.Add("deadline", "");
-						nvc.Add("category", "-");
-						nvc.Add("category_list", "-");
-						cawc.UploadValues("https://www.anckonsult.eu/?class=anc&do=check_dates&method=json", nvc);
-						cawc.UploadValues("https://www.anckonsult.eu/?class=product&do=save&method=json", nvc);
+						if (product.Definition.AncIngredient.Id != 0)
+						{
+							NameValueCollection nvc = new NameValueCollection();
+							nvc.Add("invoice", invoice.GetInvoiceNumber());
+							nvc.Add("date", invoice.GetDate().ToString("dd.MM.yyyy"));
+							nvc.Add("vendor", invoice.GetVendor());
+							nvc.Add("vendors_menu", "");
+							nvc.Add("ingredient", product.Definition.AncIngredient.Id.ToString());
+							nvc.Add("ingredient_list", "");
+							nvc.Add("total_price", product.PriceBeforeVat);
+							nvc.Add("vat", "20");
+							nvc.Add("amount", product.GetAdjustedAmount());
+							nvc.Add("deadline", "");
+							nvc.Add("category", "-");
+							nvc.Add("category_list", "-");
+							cawc.UploadValues(
+								new Uri("https://www.anckonsult.eu/?class=anc&do=check_dates&method=json"), nvc);
+							var response = Encoding.UTF8.GetString(cawc.UploadValues(
+								new Uri("https://www.anckonsult.eu/?class=product&do=save&method=json"), nvc));
+							if (!response.Contains("\"ok\":1"))
+							{
+								Console.WriteLine(response);
+								Console.WriteLine(String.Join(", ", nvc.Cast<string>().Select(s => nvc[s])));
+							}
+						}
 						index++;
 						AncUploaderWorker.ReportProgress((int)(((double)index/(double)totalProductsToUpload)*100));
 					}
