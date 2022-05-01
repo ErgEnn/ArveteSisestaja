@@ -21,7 +21,7 @@ namespace ArveteSisestaja {
 
 
 		private void mainForm_Load(object sender, EventArgs e) {
-			beginDateTimePicker.Value = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+			beginDateTimePicker.Value = new DateTime(DateTime.Today.Year, DateTime.Today.AddMonths(-1).Month, 1);
 			endDateTimePicker.Value = beginDateTimePicker.Value.AddMonths(1).AddDays(-1);
 			SettingsHandler.LoadSettings();
 			if (Directory.Exists("VIGASED")) {
