@@ -115,6 +115,7 @@
     </Compile>
     <Compile Include="DefinitionsHandler.cs" />
     <Compile Include="EncryptionHandler.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Ingredient.cs" />
     <Compile Include="Invoice.cs" />
     <Compile Include="mainForm.cs">
@@ -136,6 +137,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingsHandler.cs" />
+    <Compile Include="Util.cs" />
     <EmbeddedResource Include="DefinitionsForm.resx">
       <DependentUpon>DefinitionsForm.cs</DependentUpon>
     </EmbeddedResource>

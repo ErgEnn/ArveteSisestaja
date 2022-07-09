@@ -10,34 +10,46 @@ namespace ArveteSisestaja {
 
 		public DefinitionsForm(Product product) {
 			InitializeComponent();
-			this._product = product;
-			this.itemNameLabel.Text = product.Name;
-			this.amountLbl.Text = product.Amount;
-			this.multiplierTextBox.Text = "1000";
-			this.definitionsListBox.Items.Clear();
-			this.definitionsListBox.Items.AddRange(DefinitionsHandler.AncIngredients.Keys.ToArray());
-			this.searchBox.Focus();
-			this.ActiveControl = searchBox;
+			_product = product;
+			itemNameLabel.Text = product.Name;
+			amountLbl.Text = product.Amount;
+			multiplierTextBox.Text = "1000";
+			definitionsListBox.Items.Clear();
+			definitionsListBox.Items.AddRange(DefinitionsHandler.AncIngredients.Keys.ToArray());
+			searchBox.Focus();
+			ActiveControl = searchBox;
 		}
 
 		private void submitButton_Click(object sender, EventArgs e) {
-			object selectedItem = this.definitionsListBox.SelectedItem;
+			object selectedItem = definitionsListBox.SelectedItem;
 			if (selectedItem == null) {
 				MessageBox.Show("Nimetus on valimata!");
 				return;
 			}
-			this._product.Definition = DefinitionsHandler.AddDefinition(_product, selectedItem.ToString(), int.Parse(this.multiplierTextBox.Text)*(DefinitionsHandler.AncIngredients[selectedItem.ToString()].IsAltered?1000:1));
-			this.DialogResult = DialogResult.OK;
+
+            var mulitplierStr = multiplierTextBox.Text;
+			decimal multiplier;
+            if (mulitplierStr.Contains('x'))
+            {
+                var (multiplierPart1, multiplierPart2, _) = mulitplierStr.Split('x');
+                multiplier = Util.ToDecimal(multiplierPart1) * Util.ToDecimal(multiplierPart2);
+            }
+            else
+            {
+                multiplier = Util.ToDecimal(mulitplierStr);
+            }
+            _product.Definition = DefinitionsHandler.AddDefinition(_product, selectedItem.ToString(), multiplier*(DefinitionsHandler.AncIngredients[selectedItem.ToString()].IsAltered?1000:1));
+			DialogResult = DialogResult.OK;
 			Close();
 		}
 
-		private void searchBox_TextChanged(object sender, EventArgs e) {
-			this.definitionsListBox.Items.Clear();
+        private void searchBox_TextChanged(object sender, EventArgs e) {
+			definitionsListBox.Items.Clear();
 			Dictionary<string, Ingredient> anc = DefinitionsHandler.AncIngredients;
 			if (searchBox.Text == "") {
-				this.definitionsListBox.Items.AddRange(anc.Keys.ToArray());
+				definitionsListBox.Items.AddRange(anc.Keys.ToArray());
 			} else {
-				this.definitionsListBox.Items.AddRange(anc.Keys.Where(s => s.IndexOf(searchBox.Text,StringComparison.OrdinalIgnoreCase)>=0).ToArray());
+				definitionsListBox.Items.AddRange(anc.Keys.Where(s => s.IndexOf(searchBox.Text,StringComparison.OrdinalIgnoreCase)>=0).ToArray());
 			}
 		}
 
@@ -64,14 +76,14 @@ namespace ArveteSisestaja {
 		}
 
 		private void DefinitionsForm_FormClosing(object sender, FormClosingEventArgs e) {
-			if (this.DialogResult!=DialogResult.OK && this.DialogResult!=DialogResult.Ignore) {
-				this.DialogResult = DialogResult.Abort;
+			if (DialogResult!=DialogResult.OK && DialogResult!=DialogResult.Ignore) {
+				DialogResult = DialogResult.Abort;
 			}
 		}
 
 		private void skipBtn_Click(object sender, EventArgs e)
 		{
-			this.DialogResult = DialogResult.Ignore;
+			DialogResult = DialogResult.Ignore;
 			Close();
 		}
 
@@ -79,14 +91,14 @@ namespace ArveteSisestaja {
 		{
 			if (string.IsNullOrWhiteSpace(definitionsListBox.Text))
 			{
-				this.multiplierTextBox.Text = "1000";
-				this.unitLbl.Text = "g";
+				multiplierTextBox.Text = "1000";
+				unitLbl.Text = "g";
 				return;
 			}
-			this.unitLbl.Text = DefinitionsHandler.AncIngredients[definitionsListBox.Text].IsAltered
+			unitLbl.Text = DefinitionsHandler.AncIngredients[definitionsListBox.Text].IsAltered
 				? DefinitionsHandler.AncIngredients[definitionsListBox.Text].Unit
 				: "g";
-			this.multiplierTextBox.Text = DefinitionsHandler.AncIngredients[definitionsListBox.Text].IsAltered?"1":"1000";
+			multiplierTextBox.Text = DefinitionsHandler.AncIngredients[definitionsListBox.Text].IsAltered?"1":"1000";
 		}
 	}
 }

@@ -191,7 +191,7 @@ namespace ArveteSisestaja {
 		}
 
 		private void generatePriaReport_Click(object sender, EventArgs e) {
-			using (var generator = new PriaReport())
+			using (var generator = new PriaReport(beginDateTimePicker.Value,endDateTimePicker.Value))
 			{
 				foreach (var invoice in invoices.OrderBy(invoice => invoice.GetDate()))
 				{
@@ -212,20 +212,109 @@ namespace ArveteSisestaja {
 							}
 						}
 						if(product.Definition.AncIngredient.Name.Contains("Piim 3"))
-							generator.AddRow("Piim",invoice, product);
+							generator.AddRow("piim",invoice, product);
 						if (product.Definition.AncIngredient.Name.Contains("Keefir"))
-							generator.AddRow("Keefir",invoice, product);
+							generator.AddRow("keefir",invoice, product);
+                        if (product.Definition.AncIngredient.Name == "Jogurt 2,2% (maitsestamata)")
+                            generator.AddRow("maits_jogurt", invoice, product);
 						if (product.Definition.AncIngredient.Name == "Õun")
-							generator.AddRow("Õun",invoice, product);
+                            generator.AddRow("oun",invoice, product);
 						if (product.Definition.AncIngredient.Name == "Pirn")
-							generator.AddRow("Pirn", invoice, product);
-						if (product.Definition.AncIngredient.Name == "Nuikapsas")
-							generator.AddRow("Nuikapsas",invoice, product);
+							generator.AddRow("pirn", invoice, product);
 						if (product.Definition.AncIngredient.Name == "Marjad (külmutatud)")
 							generator.AddRow("Marjad",invoice, product);
 					}
 				}
 			}
 		}
-	}
+
+        private void showPricesBtn_Click(object sender, EventArgs e)
+        {
+			_ancHandler.AncIngredientsLoader.RunWorkerAsync();
+			List<String> allInvalidProducts = new List<String>();
+			foreach (DataGridViewRow row in invoiceDataGrid.Rows)
+			{
+				if ((bool)row.Cells[0].Value)
+				{
+					Invoice invoice = invoices.Where(i => i.GetInvoiceNumber() == row.Cells[2].Value.ToString()).First();
+					List<Product> invalidProducts = invoice.ParseProducts();
+					if (invalidProducts.Count > 0)
+					{
+						foreach (Product invalidProduct in invalidProducts)
+						{
+							if (!allInvalidProducts.Contains(invalidProduct.Name))
+							{
+								allInvalidProducts.Add(invalidProduct.Name);
+							}
+						}
+					}
+				}
+			}
+			foreach (string invalidProduct in allInvalidProducts)
+			{
+				Console.WriteLine(invalidProduct);
+			}
+			MessageBox.Show("Tundmatuid tooteid: " + allInvalidProducts.Count);
+
+
+			DialogResult dialogResult = DialogResult.OK;
+			int totalInvalidProducts = 0;
+			List<Invoice> toBeUploadedInvoices = new List<Invoice>();
+			foreach (DataGridViewRow row in invoiceDataGrid.Rows)
+			{
+                Invoice invoice = invoices.Where(i => i.GetInvoiceNumber() == row.Cells[2].Value.ToString()).First();
+				List<Product> invalidProducts = invoice.ParseProducts();
+				if (invalidProducts.Count > 0)
+				{
+					totalInvalidProducts += invalidProducts.Count;
+					foreach (Product invalidProduct in invalidProducts)
+					{
+						dialogResult = new DefinitionsForm(invalidProduct).ShowDialog();
+						if (dialogResult == DialogResult.Abort)
+						{
+							break;
+						}
+
+						if (dialogResult == DialogResult.Ignore)
+						{
+							Console.WriteLine($"[SKIPPED]: {invalidProduct.Name} | Kogus arvel: {invalidProduct.Amount}");
+						}
+					}
+				}
+				else
+				{
+					toBeUploadedInvoices.Add(invoice);
+				}
+				if (dialogResult == DialogResult.Abort)
+				{
+					break;
+				}
+			}
+			populateGrid();
+			if (totalInvalidProducts == 0)
+            {
+                foreach (var tuple in toBeUploadedInvoices
+                             .SelectMany(invoice => invoice.GetProducts())
+                             .GroupBy(product => product.Definition.AncIngredient.Name,
+                                 product =>
+                                 {
+                                     var price = Util.ToDecimal(product.PriceBeforeVat);
+                                     var adjAmount = product.GetAdjustedAmount();
+                                     var amount = Util.ToDecimal(adjAmount);
+                                     if (price == 0 || amount == 0)
+                                         return Decimal.Zero;
+                                     if (product.Definition.AncIngredient.Name == "Banaan")
+                                     {
+                                         return price / amount;
+                                     }
+									 return price/amount;
+                                 },
+                                 (s, prices) => new Tuple<string,decimal>(s, prices.Where(val => val > 0).DefaultIfEmpty(Decimal.Zero).Average()))
+                             .OrderBy(tuple => tuple.Item1))
+                {
+                    Console.WriteLine($"{tuple.Item1}: {tuple.Item2} €");
+                }
+            }
+		}
+    }
 }

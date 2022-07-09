@@ -44,7 +44,7 @@ namespace ArveteSisestaja {
 			return null;
 		}
 
-		public static Definition AddDefinition(Product product,string ancName, int multiplier) {
+		public static Definition AddDefinition(Product product,string ancName, decimal multiplier) {
 			if (GetDefinition(product.Name) == null)
 			{
 				Ingredient ingredient = AncIngredients[ancName];

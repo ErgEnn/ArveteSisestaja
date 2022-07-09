@@ -35,6 +35,7 @@ namespace ArveteSisestaja {
 			try {
 				OmnivaWorker.ReportProgress(-1);
 				ChromeOptions co = new ChromeOptions();
+                co.BinaryLocation = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 				co.AddArgument("--disable-gpu");
 				co.SetLoggingPreference(LogType.Driver, LogLevel.Off);
 				co.SetLoggingPreference(LogType.Browser, LogLevel.Off);
@@ -46,7 +47,8 @@ namespace ArveteSisestaja {
 				wait.Until(ExpectedConditions.ElementExists(By.Id("username")));
 				chromeDriver.FindElementById("username").SendKeys(SettingsHandler.GetSetting(SettingsHandler.SETTING.OMNIVA_USERNAME)); // Enter username
 				chromeDriver.FindElementById("password").SendKeys(SettingsHandler.GetSetting(SettingsHandler.SETTING.OMNIVA_PASSWORD)); // Enter password
-				chromeDriver.FindElement(By.XPath("/html/body/div/div/div[2]/form/div[5]/div/a")).Click(); // Submit
+				chromeDriver.FindElementById("password").SendKeys(Keys.Enter);
+				//chromeDriver.FindElement(By.XPath("/html/body/div/div/div[2]/form/div[5]/div/a")).Click(); // Submit
 				//By.XPath("/html/body/div[1]/div[4]/div[2]/div/div/div[1]/div/div[2]/eak-menu/div/div/ul/li[2]/a")
 				//wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("/html/body/div[1]/div[4]/div[2]/div/div/div[1]/div/div[2]/eak-menu/div/div/ul/li[2]/a"))); //Wait for everything to load
 				//wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.ClassName("loading-overlay")));
