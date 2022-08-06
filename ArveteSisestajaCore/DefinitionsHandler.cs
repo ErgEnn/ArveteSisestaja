@@ -1,53 +1,56 @@
 ﻿using System.Globalization;
+using DAL;
+using Domain;
 
 namespace ArveteSisestajaCore {
 	public class DefinitionsHandler {
-
-		private static readonly string _filedir = "definitions.csv";
-		private static Dictionary<string, Definition> _definitions;
-		public static Dictionary<string, Ingredient> AncIngredients { get; set; }
+        public static Dictionary<string, Ingredient> AncIngredients { get; set; }
 
 		public static void LoadDefinitions(Dictionary<string,Ingredient> ancIngredients) {
-			_definitions = new Dictionary<string, Definition>();
-			AncIngredients = ancIngredients;
+            AncIngredients = ancIngredients;
+            var cache = AppDbContext.Instance.AncIngredients.ToList();
+            var actualData = ancIngredients.Select(pair => new AncIngredient()
+                {AncId = pair.Value.Id, Name = pair.Value.Name, UnitName = pair.Value.Unit}).ToList();
 
-			if (File.Exists(_filedir)) {
-				string[] lines = File.ReadAllLines(_filedir);
-				foreach (string line in lines) {
-					string[] vals = line.Split(';');// product name; ANC name; [amount multiplier]
-					string productName =string.Join(";",vals.TakeWhile((_, i) => i<vals.Length-2));
-					string ancName = vals[vals.Length-2];
-					decimal multiplier = decimal.Parse(vals[vals.Length-1], CultureInfo.GetCultureInfo("de-DE"));
-					if (ancIngredients.ContainsKey(ancName) && !_definitions.ContainsKey(productName)) {
-						try {
-							_definitions.Add(productName, new Definition(ancIngredients[ancName],multiplier));
-						} catch (Exception e) {
-							Console.WriteLine("ERROR definitsiooni laadimisel!");
-						}
-					}
-				}
-				Console.WriteLine($"Laetud {_definitions.Count} definitsiooni");
-			}
-		}
+			foreach (var ancIngredient in actualData)
+            {
+                var cachedIngredient = cache.SingleOrDefault(ci => ci.Name == ancIngredient.Name);
+                if (cachedIngredient != null)
+                {
+                    AppDbContext.Instance.AncIngredients.Add(ancIngredient);
+                }
+                else
+                {
+                    if (cachedIngredient.UnitName != ancIngredient.UnitName)
+                        AppDbContext.Instance.AncIngredients.Update(ancIngredient);
+                }
+            }
 
-		public static Definition GetDefinition(string productName) {
-			if (_definitions.ContainsKey(productName.Replace(Environment.NewLine, ""))) {
-				return _definitions[productName.Replace(Environment.NewLine, "")];
+            AppDbContext.Instance.SaveChanges();
+        }
+
+		public static Definition? GetDefinition(string productName)
+        {
+            productName = productName.Replace(Environment.NewLine, "").ToLowerInvariant();
+			if (AppDbContext.Instance.ItemAncRelations.SingleOrDefault(classifier => classifier.Name == productName) is {AncIngredientName:{}} classifier) {
+				return new Definition(AncIngredients[classifier.AncIngredientName],classifier.Coefficient.Value);
 			}
 			return null;
 		}
 
-		public static Definition AddDefinition(Product product,string ancName, decimal multiplier) {
-			if (GetDefinition(product.Name) == null)
-			{
-				Ingredient ingredient = AncIngredients[ancName];
-				Definition newDefinition = new Definition(ingredient,multiplier);
-				_definitions.Add(product.Name.Replace(Environment.NewLine, ""), newDefinition);
-				File.AppendAllText(_filedir, product.Name.Replace(Environment.NewLine, "") + ";" + ancName + ";" + multiplier + "\n");
-				return newDefinition;
-			}
-			return GetDefinition(product.Name.Replace(Environment.NewLine, ""));
+		public static Definition AddDefinition(Product product,string ancName, decimal multiplier)
+        {
+            var productName = product.Name.Replace(Environment.NewLine, "").ToLowerInvariant();
 
-		}
+            if (GetDefinition(productName) is { } definition)
+                return definition;
+            var ingredient = AncIngredients[ancName];
+            var newDefinition = new ItemAncClassifier()
+                {AncIngredientName = ingredient.Name, Name = productName, Coefficient = multiplier};
+            AppDbContext.Instance.ItemAncRelations.Update(newDefinition);
+            AppDbContext.Instance.SaveChanges();
+            
+            return new Definition(ingredient,multiplier);
+        }
 	}
 }

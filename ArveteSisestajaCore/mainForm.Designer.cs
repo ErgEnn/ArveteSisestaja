@@ -1,5 +1,5 @@
 ﻿namespace ArveteSisestajaCore {
-	partial class mainForm {
+	partial class MainForm {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -23,7 +23,7 @@
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.invoiceDataGrid = new System.Windows.Forms.DataGridView();
             this.toAnc = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.vendor = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -199,7 +199,7 @@
             this.Controls.Add(this.beginDateTimePicker);
             this.Controls.Add(this.invoiceDataGrid);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "mainForm";
+            this.Name = "MainForm";
             this.Text = "Arvete sisestaja";
             this.Load += new System.EventHandler(this.mainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.invoiceDataGrid)).EndInit();

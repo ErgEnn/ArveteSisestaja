@@ -14,15 +14,13 @@ namespace ArveteSisestajaCore {
 		private DateTime _beginDate;
 		private DateTime _endDate;
 
-		public OmnivaHandler(DateTime beginDate, DateTime endDate) {
-			this._beginDate = beginDate;
-			this._endDate = endDate;
-			OmnivaWorker = new BackgroundWorker();
+		public OmnivaHandler() {
+            OmnivaWorker = new BackgroundWorker();
 			OmnivaWorker.DoWork += new DoWorkEventHandler(LoadInvoices);
 			OmnivaWorker.WorkerReportsProgress = true;
 		}
 
-		public void LoadInvoices(object sender, DoWorkEventArgs args) {
+		public void LoadInvoices(object? sender, DoWorkEventArgs args) {
 			ChromeDriver chromeDriver=null;
 			try {
 				OmnivaWorker.ReportProgress(-1);
@@ -72,24 +70,7 @@ namespace ArveteSisestajaCore {
 				chromeDriver.FindElement(InvoiceSearchPage.FirstResultItem).Click(); // Select first entry in table
 				List<Invoice> _invoices = new List<Invoice>();
 				for (int i = 0; i < amount; i++) {
-					//int retries = 0;
-					//while (true) {
-					//	try {
-					//		wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.Id("aranea-loading-message")));
-					//		Console.WriteLine("hidden");
-					//		chromeDriver.FindElementByXPath("//a[contains(.,'Manus 1')]")
-					//		wait.Until(ExpectedConditions.ElementExists(By.XPath("//a[contains(.,'Manus 1')]"))); // Button Manus 1
-					//		break;
-					//	} catch (Exception e) {
-					//		Console.WriteLine("Retrying");
-					//		retries++;
-					//		if (retries == 3) {
-					//			_invoices.Add(new Invoice(chromeDriver.GetScreenshot()));
-					//			break;
-					//		}
-					//	}
-					//}
-					try {
+                    try {
 						wait.Until(ExpectedConditions.InvisibilityOfElementLocated(InvoicePage.LoadingSpinner));
 						chromeDriver.FindElement(InvoicePage.SecondAttachmentTab).Click();
 						//chromeDriver.FindElementByXPath("//*[@id=\"invoiceAttachmentViewerBlockEl\"]/div/div[1]/div/ul/li[2]/a[1]").Click(); // Select XML file
@@ -134,5 +115,9 @@ namespace ArveteSisestajaCore {
 			}
 		}
 
-	}
+        public Task<List<Invoice>> LoadInvoices(DateTime from, DateTime to)
+        {
+            return null;
+        }
+    }
 }

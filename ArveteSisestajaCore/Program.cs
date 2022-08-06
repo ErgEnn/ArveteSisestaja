@@ -1,17 +1,22 @@
+using Autofac;
+using Autofac.Core;
+using DAL;
+
 namespace ArveteSisestajaCore
 {
     internal static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            var builder = new ContainerBuilder();
+            builder.RegisterType<AppDbContext>().AsSelf();
+            builder.RegisterType<MainForm>().AsSelf();
+            builder.RegisterType<OmnivaHandler>().AsSelf();
+            builder.RegisterType<ANCHandler>().AsSelf();
+            var container = builder.Build();
             ApplicationConfiguration.Initialize();
-            Application.Run(new mainForm());
+            Application.Run(container.Resolve<MainForm>());
         }
     }
 }

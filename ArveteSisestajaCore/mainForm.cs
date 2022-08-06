@@ -1,17 +1,21 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
+using BLL;
+using DAL;
 
 namespace ArveteSisestajaCore {
-	public partial class mainForm : Form {
-		private ANCHandler _ancHandler;
-		private List<string> _uploadedInvoices;
-		private List<Invoice> invoices;
-		private Stopwatch omnivaStopwatch;
-		private Stopwatch ancStopwatch;
+	public partial class MainForm : Form {
+        private readonly OmnivaHandler _omnivaHandler;
+        private readonly ANCHandler _ancHandler;
+        private readonly InvoiceService _invoiceService;
 
-		public mainForm() {
-			InitializeComponent();
-		}
+		public MainForm(OmnivaHandler omnivaHandler, ANCHandler ancHandler, InvoiceService invoiceService)
+        {
+            _omnivaHandler = omnivaHandler;
+            _ancHandler = ancHandler;
+            _invoiceService = invoiceService;
+            InitializeComponent();
+        }
 
 
 		private void mainForm_Load(object sender, EventArgs e) {
@@ -28,15 +32,16 @@ namespace ArveteSisestajaCore {
 			beginDateTimePicker.Enabled = false;
 			endDateTimePicker.Enabled = false;
 			loadInvoicesBtn.Enabled = false;
-			OmnivaHandler omniva = new OmnivaHandler(beginDateTimePicker.Value, endDateTimePicker.Value);
-			omniva.OmnivaWorker.ProgressChanged += OmnivaWorkerOnProgressChanged;
-			omniva.OmnivaWorker.RunWorkerCompleted += OmnivaWorkerOnRunWorkerCompleted;
-			omnivaStopwatch = new Stopwatch();
-			omnivaStopwatch.Start();
-			omniva.OmnivaWorker.RunWorkerAsync();
 
-			ancStopwatch = new Stopwatch();
-			_ancHandler = new ANCHandler();
+            _omnivaHandler
+                .LoadInvoices(beginDateTimePicker.Value, endDateTimePicker.Value)
+                .ContinueWith(invoicesTask =>
+                {
+					RefreshGrid();
+                    MessageBox.Show("Arved laetud");
+                }).ConfigureAwait(true);
+            
+
 			_ancHandler.LogIn(SettingsHandler.GetSetting(SettingsHandler.SETTING.ANC_USERNAME), SettingsHandler.GetSetting(SettingsHandler.SETTING.ANC_PASSWORD));
 			_ancHandler.AncIngredientsLoader.RunWorkerCompleted += AncIngredientsLoaderOnRunWorkerCompleted;
 			_ancHandler.AncIngredientsLoader.RunWorkerAsync();
@@ -48,18 +53,13 @@ namespace ArveteSisestajaCore {
 		}
 
 		private void AncUploaderWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
-			ancStopwatch.Stop();
-			_ancHandler.AncUploadedInvoicesLoader.RunWorkerCompleted += (o, args) => populateGrid();
+            _ancHandler.AncUploadedInvoicesLoader.RunWorkerCompleted += (o, args) => RefreshGrid();
 			_ancHandler.AncUploadedInvoicesLoader.RunWorkerAsync(new List<object> { beginDateTimePicker.Value, endDateTimePicker.Value });
-			MessageBox.Show("Arved sisestatud. Aega läks " + (ancStopwatch.Elapsed.TotalSeconds).ToString("###,#") + " s");
+			MessageBox.Show("Arved sisestatud");
 			Process.Start("VIGASED");
 		}
 
-		private void AncUploadedInvoicesLoaderOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs) {
-			_uploadedInvoices = (List<string>) runWorkerCompletedEventArgs.Result;
-		}
-
-		private void AncIngredientsLoaderOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs) {
+        private void AncIngredientsLoaderOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs) {
 			DefinitionsHandler.LoadDefinitions((Dictionary<string, Ingredient>) runWorkerCompletedEventArgs.Result);
 			_ancHandler.AncUploadedInvoicesLoader.RunWorkerAsync(new List<object> { beginDateTimePicker.Value, endDateTimePicker.Value });
 		}
@@ -77,31 +77,22 @@ namespace ArveteSisestajaCore {
 			}
 		}
 
-		private void OmnivaWorkerOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs) {
-			invoices = (List<Invoice>) runWorkerCompletedEventArgs.Result;
-			omnivaStopwatch.Stop();
-			populateGrid();
-			MessageBox.Show("Arved laetud. Aega läks " + (omnivaStopwatch.Elapsed.TotalSeconds).ToString("###,#") + " s");
-	}
-
-		private void populateGrid() {
+        private void RefreshGrid() {
 			invoiceDataGrid.Rows.Clear();
-			foreach(Invoice invoice in invoices) {
-				invoice.ParseProducts();
+			foreach(BLL.Entities.Invoice invoice in _invoiceService.GetAllInvoices()) {
+				//invoice.ParseProducts();
 				DataGridViewRow row = new DataGridViewRow();
 				row.CreateCells(invoiceDataGrid);
 				row.Cells[0].Value = true;
-				if (_uploadedInvoices.Contains(invoice.GetInvoiceNumber())) {
-					invoice.SetAlreadyUploaded(true);
-					invoice.SetToBeUploaded(false);
+				if (invoice.ExistsInAnc) {
 					row.Cells[0].Value = false;
 				}
 				row.Cells[0].ReadOnly = false;
-				row.Cells[1].Value = invoice.GetVendor();
-				row.Cells[2].Value = invoice.GetInvoiceNumber();
-				row.Cells[3].Value = invoice.GetDate().ToString("dd.MM.yyyy");
-				row.Cells[4].Value = invoice.GetStatus();
-				row.DefaultCellStyle.BackColor = invoice.GetColor();
+				row.Cells[1].Value = invoice.Vendor;
+				row.Cells[2].Value = invoice.Identifier;
+				row.Cells[3].Value = invoice.Date.ToString("dd.MM.yyyy");
+				row.Cells[4].Value = "mingi staatus siia";
+				row.DefaultCellStyle.BackColor = Color.BlueViolet;
 				invoiceDataGrid.Rows.Add(row);
 			}
 			uploadInvoices.Enabled = true;
@@ -159,9 +150,8 @@ namespace ArveteSisestajaCore {
 					break;
 				}
 			}
-			populateGrid();
+			RefreshGrid();
 			if (totalInvalidProducts == 0) {
-				ancStopwatch.Start();
 				_ancHandler.AncUploaderWorker.RunWorkerAsync(toBeUploadedInvoices);
 			}
 		}
@@ -179,12 +169,15 @@ namespace ArveteSisestajaCore {
 		}
 
 		private void invoiceDataGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
+#if false
 			if (invoices != null) {
 				invoices.Where(invoice => invoice.GetInvoiceNumber() == invoiceDataGrid.Rows[e.RowIndex].Cells[2].Value.ToString()).First().SetToBeUploaded((bool) invoiceDataGrid.Rows[e.RowIndex].Cells[0].Value);
 			}
-		}
+#endif
+        }
 
 		private void generatePriaReport_Click(object sender, EventArgs e) {
+#if false
 			using (var generator = new PriaReport(beginDateTimePicker.Value,endDateTimePicker.Value))
 			{
 				foreach (var invoice in invoices.OrderBy(invoice => invoice.GetDate()))
@@ -220,10 +213,14 @@ namespace ArveteSisestajaCore {
 					}
 				}
 			}
+#endif
 		}
 
         private void showPricesBtn_Click(object sender, EventArgs e)
         {
+#if false
+            
+
 			_ancHandler.AncIngredientsLoader.RunWorkerAsync();
 			List<String> allInvalidProducts = new List<String>();
 			foreach (DataGridViewRow row in invoiceDataGrid.Rows)
@@ -284,7 +281,7 @@ namespace ArveteSisestajaCore {
 					break;
 				}
 			}
-			populateGrid();
+			RefreshGrid();
 			if (totalInvalidProducts == 0)
             {
                 foreach (var tuple in toBeUploadedInvoices
@@ -309,6 +306,7 @@ namespace ArveteSisestajaCore {
                     Console.WriteLine($"{tuple.Item1}: {tuple.Item2} €");
                 }
             }
+#endif
 		}
-    }
+	}
 }
