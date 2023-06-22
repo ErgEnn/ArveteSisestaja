@@ -222,10 +222,17 @@ namespace ArveteSisestaja {
 						if (product.Definition.AncIngredient.Name == "Pirn")
 							generator.AddRow("pirn", invoice, product);
 						if (product.Definition.AncIngredient.Name == "Marjad (külmutatud)")
-							generator.AddRow("Marjad",invoice, product);
+							generator.AddRow("marjad",invoice, product);
+						if (product.Definition.AncIngredient.Name == "Nuikapsas")
+							generator.AddRow("nuikapsas",invoice, product);
+						if (product.Definition.AncIngredient.Name == "Redis")
+							generator.AddRow("redis",invoice, product);
+						if (product.Definition.AncIngredient.Name == "Kurk")
+							generator.AddRow("kurk",invoice, product);
 					}
 				}
-			}
+            }
+			
 		}
 
         private void showPricesBtn_Click(object sender, EventArgs e)

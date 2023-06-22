@@ -43,7 +43,7 @@ namespace ArveteSisestaja {
 				//chromeDriver.Manage().Window.Position = new System.Drawing.Point(0, -2000);
 				chromeDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
 				var wait = new WebDriverWait(chromeDriver, TimeSpan.FromSeconds(15));
-				chromeDriver.Navigate().GoToUrl("https://eservice.omniva.eu/epit/ui/finance"); //GOTO Login page
+				chromeDriver.Navigate().GoToUrl("https://finance.omniva.eu/finance/ui/cost/receipts"); //GOTO Login page
 				wait.Until(ExpectedConditions.ElementExists(By.Id("username")));
 				chromeDriver.FindElementById("username").SendKeys(SettingsHandler.GetSetting(SettingsHandler.SETTING.OMNIVA_USERNAME)); // Enter username
 				chromeDriver.FindElementById("password").SendKeys(SettingsHandler.GetSetting(SettingsHandler.SETTING.OMNIVA_PASSWORD)); // Enter password

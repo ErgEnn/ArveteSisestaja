@@ -34,6 +34,11 @@ namespace ArveteSisestaja {
                 var (multiplierPart1, multiplierPart2, _) = mulitplierStr.Split('x');
                 multiplier = Util.ToDecimal(multiplierPart1) * Util.ToDecimal(multiplierPart2);
             }
+			else if (mulitplierStr.Contains('*'))
+            {
+                var (multiplierPart1, multiplierPart2, _) = mulitplierStr.Split('*');
+                multiplier = Util.ToDecimal(multiplierPart1) * Util.ToDecimal(multiplierPart2);
+            }
             else
             {
                 multiplier = Util.ToDecimal(mulitplierStr);
