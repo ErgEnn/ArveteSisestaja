@@ -31,16 +31,20 @@ namespace ArveteSisestajaCore
 
 		public void Dispose()
 		{
+            foreach (var excelWorksheet in _worksheets)
+            {
+                AddFooter(excelWorksheet.Key, excelWorksheet.Value);
+            }
 			foreach (var pair in _files)
             {
                 pair.Value.Save();
             }
+            Process.Start("explorer.exe", $"/select, \"{_files.First().Value.File.Directory.FullName}\"");
             foreach (var pair in _files)
             {
                 pair.Value.Dispose();
             }
-			//Process.Start("explorer.exe", $"/select, \"{_files.First().Value.File.Directory.FullName}\"");
-		}
+        }
 
         private ExcelPackage GetFile(string name)
         {
@@ -90,6 +94,13 @@ namespace ArveteSisestajaCore
 				sheet.Cells[row, i+1].Value = _columns[i].DataParser(invoice,product);
 			}
 		}
+
+        public void AddFooter(string name, ExcelWorksheet sheet)
+        {
+            var row = IncrAndGetIndex(name);
+            sheet.Cells[row, 4].Formula = $"=SUM(D2:D{row-1})";
+            sheet.Cells[row, 5].Formula = $"=SUM(D2:D{row-1})";
+        }
 
         public class ExcelCol
         {
