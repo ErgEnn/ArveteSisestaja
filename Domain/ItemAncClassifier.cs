@@ -12,8 +12,9 @@ namespace Domain
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [StringLength(256)]
         public string Name { get; init; }
-
+        [StringLength(256)]
         public string? AncIngredientName { get; init; }
         public AncIngredient? AncIngredient { get; init; }
         public decimal? Coefficient { get; init; }

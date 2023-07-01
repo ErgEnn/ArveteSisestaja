@@ -12,8 +12,10 @@ namespace Domain
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [StringLength(256)]
         public string Name { get; init; }
         public int AncId { get; init; }
+        [StringLength(8)]
         public string? UnitName { get; init; }
     }
 }

@@ -23,21 +23,15 @@ namespace ArveteSisestajaCore {
 					co.SetLoggingPreference(LogType.Driver, LogLevel.Off);
 					co.SetLoggingPreference(LogType.Browser, LogLevel.Off);
 					chromeDriver = new ChromeDriver(co);
-					//chromeDriver.Manage().Window.Position = new System.Drawing.Point(0, -2000);
 					chromeDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
 					var wait = new WebDriverWait(chromeDriver, TimeSpan.FromSeconds(15));
-					chromeDriver.Navigate().GoToUrl("https://eservice.omniva.eu/epit/ui/finance"); //GOTO Login page
+					chromeDriver.Navigate().GoToUrl("https://finance.omniva.eu/finance/ui/cost/receipts"); //GOTO Login page
 					wait.Until(ExpectedConditions.ElementExists(By.Id("username")));
 					chromeDriver.FindElement(LoginPage.Username).SendKeys(SettingsHandler.GetSetting(SettingsHandler.SETTING.OMNIVA_USERNAME)); // Enter username
 					chromeDriver.FindElement(LoginPage.Password).SendKeys(SettingsHandler.GetSetting(SettingsHandler.SETTING.OMNIVA_PASSWORD)); // Enter password
 					chromeDriver.FindElement(LoginPage.Password).SendKeys(Keys.Enter);
-					//chromeDriver.FindElement(By.XPath("/html/body/div/div/div[2]/form/div[5]/div/a")).Click(); // Submit
-					//By.XPath("/html/body/div[1]/div[4]/div[2]/div/div/div[1]/div/div[2]/eak-menu/div/div/ul/li[2]/a")
-					//wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("/html/body/div[1]/div[4]/div[2]/div/div/div[1]/div/div[2]/eak-menu/div/div/ul/li[2]/a"))); //Wait for everything to load
-					//wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.ClassName("loading-overlay")));
-					//chromeDriver.FindElementByXPath("/html/body/div[1]/div[4]/div[2]/div/div/div[1]/div/div[2]/eak-menu/div/div/ul/li[2]/a").Click(); //Select 'invoices'
-					wait.Until(ExpectedConditions.FrameToBeAvailableAndSwitchToIt(By.Id("app-iframe")));
-					wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("m.f0.root.menu.f0.list.form.arrivalDate_start")));
+                    chromeDriver.Navigate().GoToUrl("https://finance.omniva.eu/finance/main");
+                    wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("m.f0.root.menu.f0.list.form.arrivalDate_start")));
 					chromeDriver.FindElement(InvoiceSearchComponent.InvoiceArrivalDateStartDatepicker).Click();
 					chromeDriver.FindElement(InvoiceSearchComponent.InvoiceArrivalDateStartDatepicker).SendKeys(Keys.Backspace); //Set arrival beginning date
 					chromeDriver.FindElement(InvoiceSearchComponent.InvoiceArrivalDateEndDatepicker).Click();
@@ -48,14 +42,10 @@ namespace ArveteSisestajaCore {
 					chromeDriver.FindElement(InvoiceSearchComponent.InvoiceDateToDatepicker).SendKeys(Keys.Home + to.ToString("ddMMyyyy")); //Set end date
 					chromeDriver.FindElement(InvoiceSearchComponent.InvoiceStatePicker).SendKeys("Näita"); //Select to show all invoices
 					wait.Until(ExpectedConditions.ElementToBeClickable(InvoiceSearchComponent.Submit));
-					Console.WriteLine("Clickable");
-					chromeDriver.FindElement(InvoiceSearchComponent.Submit).Click();// Submit
-
-					wait.Until(ExpectedConditions.ElementExists(InvoiceSearchPage.LoadingSpinner));
-					Console.WriteLine("1");
-					wait.Until(ExpectedConditions.ElementIsVisible(InvoiceSearchPage.LoadingSpinner));
-					Console.WriteLine("2");
-					wait.Until(ExpectedConditions.InvisibilityOfElementLocated(InvoiceSearchPage.LoadingSpinner));
+                    chromeDriver.FindElement(InvoiceSearchComponent.Submit).Click();// Submit
+                    wait.Until(ExpectedConditions.ElementExists(InvoiceSearchPage.LoadingSpinner));
+                    wait.Until(ExpectedConditions.ElementIsVisible(InvoiceSearchPage.LoadingSpinner));
+                    wait.Until(ExpectedConditions.InvisibilityOfElementLocated(InvoiceSearchPage.LoadingSpinner));
 					wait.Until(ExpectedConditions.ElementToBeClickable(InvoiceSearchPage.FirstResultItem));
 					string amountStr = chromeDriver.FindElement(InvoiceSearchPage.TotalResultsCount).Text.Split(new[] { " | " }, StringSplitOptions.None)[1].Split(' ')[1]; //Get amount of invoices
 					int amount = Int32.Parse(amountStr);

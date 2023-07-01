@@ -11,33 +11,31 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220709182905_AddRelation")]
-    partial class AddRelation
+    [Migration("20230622192058_Initial")]
+    partial class Initial
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.6")
+                .HasAnnotation("ProductVersion", "7.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Domain.AncIngredient", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
 
                     b.Property<int>("AncId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("UnitName")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(8)
+                        .HasColumnType("varchar(8)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Name");
 
                     b.ToTable("AncIngredients");
                 });
@@ -45,17 +43,19 @@ namespace DAL.Migrations
             modelBuilder.Entity("Domain.ItemAncClassifier", b =>
                 {
                     b.Property<string>("Name")
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
 
-                    b.Property<int?>("AncIngredientId")
-                        .HasColumnType("int");
+                    b.Property<string>("AncIngredientName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
 
                     b.Property<decimal?>("Coefficient")
                         .HasColumnType("decimal(65,30)");
 
                     b.HasKey("Name");
 
-                    b.HasIndex("AncIngredientId");
+                    b.HasIndex("AncIngredientName");
 
                     b.ToTable("ItemAncRelations");
                 });
@@ -64,7 +64,7 @@ namespace DAL.Migrations
                 {
                     b.HasOne("Domain.AncIngredient", "AncIngredient")
                         .WithMany()
-                        .HasForeignKey("AncIngredientId");
+                        .HasForeignKey("AncIngredientName");
 
                     b.Navigation("AncIngredient");
                 });

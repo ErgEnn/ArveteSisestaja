@@ -30,7 +30,7 @@ public partial class MainForm : Form
     {
         beginDateTimePicker.Value = new DateTime(DateTime.Today.Year, DateTime.Today.AddMonths(-1).Month, 1);
         endDateTimePicker.Value = beginDateTimePicker.Value.AddMonths(1).AddDays(-1);
-        SettingsHandler.LoadSettings();
+        
         if (Directory.Exists("VIGASED")) Directory.Delete("VIGASED", true);
         Directory.CreateDirectory("VIGASED");
     }
@@ -47,8 +47,6 @@ public partial class MainForm : Form
             {
                 _invoiceService.AddInvoiceRange(invoicesTask.Result);
                 _ancClassifierService.ClassifyInvoices(_invoiceService.GetAllInvoices());
-                RefreshGrid();
-                MessageBox.Show("Arved laetud");
             }).ConfigureAwait(true);
         
     }
