@@ -35,14 +35,13 @@ public partial class MainForm : Form
         Directory.CreateDirectory("VIGASED");
     }
 
-    private void loadInvoicesBtn_Click(object sender, EventArgs e)
+    private async void loadInvoicesBtn_Click(object sender, EventArgs e)
     {
         beginDateTimePicker.Enabled = false;
         endDateTimePicker.Enabled = false;
         loadInvoicesBtn.Enabled = false;
 
-        _omnivaHandler
-            .LoadInvoices(beginDateTimePicker.Value, endDateTimePicker.Value)
+        var invoices = await _omnivaHandler.LoadInvoices(beginDateTimePicker.Value, endDateTimePicker.Value)
             .ContinueWith(invoicesTask =>
             {
                 _invoiceService.AddInvoiceRange(invoicesTask.Result);
@@ -103,9 +102,7 @@ public partial class MainForm : Form
     private void DateTimePicker_ValueChanged(object sender, EventArgs e)
     {
         if (beginDateTimePicker.Value > endDateTimePicker.Value)
-            loadInvoicesBtn.Enabled = false;
-        else
-            loadInvoicesBtn.Enabled = true;
+            endDateTimePicker.Value = beginDateTimePicker.Value.AddMonths(1).AddDays(-1);
     }
 
     private void invoiceDataGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
