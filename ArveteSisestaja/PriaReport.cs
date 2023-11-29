@@ -104,7 +104,7 @@ namespace ArveteSisestaja
         {
             var row = IncrAndGetIndex(name);
             sheet.Cells[row, 4].Formula = $"=SUM(D2:D{row-1})";
-            sheet.Cells[row, 5].Formula = $"=SUM(D2:D{row-1})";
+            sheet.Cells[row, 5].Formula = $"=SUM(E2:E{row-1})";
         }
 
         public class ExcelCol
