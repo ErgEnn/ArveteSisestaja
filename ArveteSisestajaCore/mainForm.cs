@@ -40,13 +40,13 @@ public partial class MainForm : Form
         beginDateTimePicker.Enabled = false;
         endDateTimePicker.Enabled = false;
         loadInvoicesBtn.Enabled = false;
-
+        /*
         var invoices = await _omnivaHandler.LoadInvoices(beginDateTimePicker.Value, endDateTimePicker.Value)
             .ContinueWith(invoicesTask =>
             {
                 _invoiceService.AddInvoiceRange(invoicesTask.Result);
                 _ancClassifierService.ClassifyInvoices(_invoiceService.GetAllInvoices());
-            }).ConfigureAwait(true);
+            }).ConfigureAwait(true);*/
         
     }
 

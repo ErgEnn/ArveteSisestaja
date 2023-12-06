@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{2E41BEA0-F4B9-47B9-B4D5-6E3525FABB95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL", "BLL\BLL.csproj", "{DB81F989-2D97-41BE-B0F5-753E693EE8FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL", "BLL\BLL.csproj", "{DB81F989-2D97-41BE-B0F5-753E693EE8FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvoiceDownloader", "InvoiceDownloader\InvoiceDownloader.csproj", "{B7238FCD-E4B2-4B0B-803A-109566D6A02D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloaderRunner", "DownloaderRunner\DownloaderRunner.csproj", "{5D3E62DE-0C1F-4C4B-97FF-4B483FC4D05D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{DB81F989-2D97-41BE-B0F5-753E693EE8FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB81F989-2D97-41BE-B0F5-753E693EE8FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB81F989-2D97-41BE-B0F5-753E693EE8FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7238FCD-E4B2-4B0B-803A-109566D6A02D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7238FCD-E4B2-4B0B-803A-109566D6A02D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7238FCD-E4B2-4B0B-803A-109566D6A02D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7238FCD-E4B2-4B0B-803A-109566D6A02D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D3E62DE-0C1F-4C4B-97FF-4B483FC4D05D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D3E62DE-0C1F-4C4B-97FF-4B483FC4D05D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D3E62DE-0C1F-4C4B-97FF-4B483FC4D05D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D3E62DE-0C1F-4C4B-97FF-4B483FC4D05D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
