@@ -1,0 +1,92 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using InvoiceDownloader
+@using Microsoft.EntityFrameworkCore
+@using DbContext = BlazorApp.DbContext
+@using System.Xml
+@using System.Xml.Serialization
+
+@inject DbContext DbContext
+@inject Downloader Downloader
+@inject NavigationManager NavigationManager
+
+<PageTitle>Arved</PageTitle>
+
+<div style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 1em">
+    <button class="btn btn-primary" @onclick="LoadInvoices">Värskenda arved</button>
+    <div style="display:flex; flex-direction: row">
+        <DateInput TValue="DateOnly" @bind-Value="@startDate" Placeholder="Algus kuupäev" ></DateInput>
+        <DateInput TValue="DateOnly" @bind-Value="@endDate" Placeholder="Lõpp kuupäev"></DateInput>
+        <button class="btn btn-primary" @onclick="ToAnc">Lae arved ANCsse</button>
+    </div>
+</div>
+
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Arve nr</th>
+        <th>Saatja</th>
+        <th>Kuupäev</th>
+        <th>Staatus</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var invoice in invoices)
+    {
+        <tr>
+            <td>@invoice.InvoiceNo</td>
+            <td>@invoice.InvoiceSender</td>
+            <td>@invoice.InvoiceDateTime.ToString("dd.MM.yyyy")</td>
+            <td>OK</td>
+        </tr>
+    }
+    </tbody>
+
+</table>
+
+@code {
+    private Invoice[] invoices = Array.Empty<Invoice>();
+    private DateOnly startDate = DateOnly.FromDateTime(new DateTime(2024,01,01));
+    private DateOnly endDate = DateOnly.FromDateTime(DateTime.Today);
+
+    protected override async Task OnInitializedAsync()
+    {
+        invoices = await DbContext.Invoices.OrderByDescending(invoice => invoice.InvoiceDateTime).ToArrayAsync();
+    }
+
+    private async Task ToAnc()
+    {
+        var invoices = await DbContext.Invoices.Where(invoice => invoice.InvoiceDateTime >= startDate && invoice.InvoiceDateTime <= endDate).ToArrayAsync();
+        var existingMappings = await DbContext.AncClassifierMappings.ToArrayAsync();
+        foreach (var invoice in invoices)
+        {
+            var reader = XmlReader.Create(invoice.XML.ToStream(), new XmlReaderSettings() {ConformanceLevel = ConformanceLevel.Document});
+            var einvoice = new XmlSerializer(typeof(EInvoice.E_Invoice)).Deserialize(reader) as EInvoice.E_Invoice;
+            foreach (var item in einvoice.Invoice.InvoiceItem.InvoiceItemGroup)
+            {
+                var productName = item.Description.ReplaceLineEndings("");
+
+            }
+        }
+        NavigationManager.NavigateTo("/defineClassifier");
+    }
+
+    private async Task LoadInvoices()
+    {
+        var downloadInvoices = await Downloader.DownloadInvoices(startDate, endDate);
+        foreach (var invoice in downloadInvoices)
+        {
+            Console.WriteLine($"{invoice.InvoiceNo} {invoice.InvoiceSender} {invoice.InvoiceDateTime}");
+        }
+        var existingInvoices = await DbContext.Invoices.Where(invoice => invoice.InvoiceDateTime >= startDate && invoice.InvoiceDateTime <= endDate).ToArrayAsync();
+        var newInvoices = downloadInvoices
+            .Where(newInvoice => !existingInvoices
+                .Any(existingInvoice => 
+                    newInvoice.InvoiceNo == existingInvoice.InvoiceNo 
+                    && newInvoice.InvoiceSender == existingInvoice.InvoiceSender));
+        await DbContext.Invoices.AddRangeAsync(newInvoices);
+        await DbContext.SaveChangesAsync();
+        await OnInitializedAsync();
+    }
+}

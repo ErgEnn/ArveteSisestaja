@@ -2,6 +2,7 @@
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using InvoiceDownloader.Helpers;
 using InvoiceDownloader.Omniva;
 
@@ -9,7 +10,7 @@ namespace InvoiceDownloader;
 
 public class Downloader((string username, string password) credentials)
 {
-    public async Task<IReadOnlyCollection<Invoice>> DownloadInvoices(DateTime from, DateTime to)
+    public async Task<IReadOnlyCollection<Invoice>> DownloadInvoices(DateOnly from, DateOnly to)
     {
         return await Task.Run(() =>
         {
@@ -23,6 +24,7 @@ public class Downloader((string username, string password) credentials)
                     BinaryLocation = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
                 };
                 co.AddArgument("--disable-gpu");
+                co.AddArgument("--headless=new");
                 co.SetLoggingPreference(LogType.Driver, LogLevel.Off);
                 co.SetLoggingPreference(LogType.Browser, LogLevel.Off);
                 chromeDriver = new ChromeDriver(co);
@@ -76,7 +78,9 @@ public class Downloader((string username, string password) credentials)
 
             int GetInvoicesCount()
             {
-                string amountStr = chromeDriver.FindElement(InvoiceSearchPage.TotalResultsCount).Text.Split(new[] { " | " }, StringSplitOptions.None)[1].Split(' ')[1]; //Get amount of invoices
+                wait.Until(ExpectedConditions.ElementIsVisible(()=>InvoiceSearchPage.TotalResultsCount));
+                string amountStr = chromeDriver.FindElement(InvoiceSearchPage.TotalResultsCount).Text; //Get amount of invoices
+                amountStr = new Regex("Kokku (\\d+)").Match(amountStr).Groups[1].Value;
                 return int.Parse(amountStr);
             }
 
@@ -109,18 +113,19 @@ public class Downloader((string username, string password) credentials)
                     try
                     {
                         wait.Until(ExpectedConditions.ElementToBeClickable(()=>InvoicePage.FirstAttachmentTab));
-
+                        Thread.Sleep(500);
                         var invoiceNo = InvoicePage.InvoiceNo.FindElement(chromeDriver)!.Text.Trim();
                         if (string.IsNullOrWhiteSpace(invoiceNo))
                         {
-                            InvoicePage.InvoiceMetadataCollapse.SafeFindElement(chromeDriver).Click();
+                            InvoicePage.InvoiceMetadataCollapse.SafeExecuteOnElement(chromeDriver, element => element.Click());
+                            Thread.Sleep(250);
                         }
 
                         wait.Until(ExpectedConditions.ElementIsVisible(() => InvoicePage.InvoiceNo));
 
-                        invoiceNo = InvoicePage.InvoiceNo.SafeFindElement(chromeDriver)!.Text.Trim();
+                        invoiceNo = InvoicePage.InvoiceNo.SafeExecuteOnElement(chromeDriver, element => element.Text).Trim();
                         var invoiceDateStr = InvoicePage.InvoiceDate.FindElement(chromeDriver)!.Text.Trim();
-                        var invoiceDate = (invoiceDateStr as IConvertible)!.ToDateTime(new DateTimeFormatInfo{ ShortDatePattern = "dd.MM.yyyy" });
+                        var invoiceDate = DateOnly.ParseExact(invoiceDateStr, "dd.MM.yyyy");
                         var invoiceSender = InvoicePage.InvoiceSender.FindElement(chromeDriver)!.Text.Trim();
                         var pdfSrc = InvoicePage.InvoicePDF.FindElement(chromeDriver)!.GetAttribute("src");
 

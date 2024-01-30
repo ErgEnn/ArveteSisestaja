@@ -1,0 +1,64 @@
+﻿@page "/defineClassifier"
+@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+@using DbContext = BlazorApp.DbContext
+
+@inject DbContext DbContext
+@inject AncHandler AncHandler
+
+<div style="display:flex; flex-direction: column">
+    
+    <select multiple="multiple" style="height:1000px" @bind="@selectedClassifier">
+        @foreach (var classifier in classifiers)
+        {
+            <option value="@classifier.Id">@classifier.Name</option>
+        }
+    </select>
+    @if (classifiers.SingleOrDefault(c => c.Id == selectedClassifier[0]) is {Unit: "kg"})
+    {
+        <label class="form-label" style="margin-top: 1em">Sisesta toote kaal grammides</label>
+    }
+    else
+    {
+        @multiplier = 1;
+        <label class="form-label" style="margin-top: 1em">Sisesta toote kogus tükkides</label>
+    }
+    <NumberInput TValue="int" @bind-Value="@multiplier"></NumberInput>
+    <button class="btn btn-primary" style="margin-top: 1em" @onclick="SaveClassifier">Salvesta</button>
+    <button class="btn" style="margin-top: 5em"@onclick="RefreshClassifiers">Värskenda ANC kaupade nimekirja</button>
+</div>
+
+
+
+@code {
+    private AncClassifier[] classifiers;
+    private int[] selectedClassifier = new int[1];
+    private int multiplier = 1000;
+
+    protected override async Task OnInitializedAsync()
+    {
+        classifiers = await DbContext.AncClassifiers.OrderBy(classifier => classifier.Name).ToArrayAsync();
+    }
+
+    private async Task SaveClassifier()
+    {
+        Console.WriteLine($"{selectedClassifier[0]} {multiplier}");
+        selectedClassifier[0] = 0;
+        multiplier = 1000;
+    }
+
+    private async Task RefreshClassifiers()
+    {
+        var classifiers = await AncHandler.GetAncClassifiers();
+        var existingClassifiers = await DbContext.AncClassifiers.ToArrayAsync();
+        foreach (var classifier in classifiers)
+        {
+            if (existingClassifiers.FirstOrDefault(ec => ec.Id == classifier.Id) is { })
+                continue;
+            else
+                DbContext.AncClassifiers.Add(classifier);
+        }
+        await DbContext.SaveChangesAsync();
+        await OnInitializedAsync();
+    }
+}
