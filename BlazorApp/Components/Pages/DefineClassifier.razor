@@ -5,9 +5,12 @@
 
 @inject DbContext DbContext
 @inject AncHandler AncHandler
+@inject NavigationManager NavigationManager
 
 <div style="display:flex; flex-direction: column">
-    
+    <h2>Toote nimi: @mapping.ProductName</h2>
+    <h3>Kogus arvel: ???</h3>
+    <input @bind="@query" @oninput="@QueryChanged"/>
     <select multiple="multiple" style="height:1000px" @bind="@selectedClassifier">
         @foreach (var classifier in classifiers)
         {
@@ -20,7 +23,6 @@
     }
     else
     {
-        @multiplier = 1;
         <label class="form-label" style="margin-top: 1em">Sisesta toote kogus tükkides</label>
     }
     <NumberInput TValue="int" @bind-Value="@multiplier"></NumberInput>
@@ -31,20 +33,37 @@
 
 
 @code {
-    private AncClassifier[] classifiers;
+    private AncClassifier[] dbClassifiers = new AncClassifier[0];
+    private AncClassifier[] classifiers = new AncClassifier[0];
     private int[] selectedClassifier = new int[1];
     private int multiplier = 1000;
+    private AncClassifierMapping? mapping;
+    private string? query;
 
     protected override async Task OnInitializedAsync()
     {
-        classifiers = await DbContext.AncClassifiers.OrderBy(classifier => classifier.Name).ToArrayAsync();
+        dbClassifiers = await DbContext.AncClassifiers.OrderBy(classifier => classifier.Name).ToArrayAsync();
+        classifiers = dbClassifiers;
+        await LoadUnmappedMapping();
+    }
+
+    private async Task LoadUnmappedMapping()
+    {
+        mapping = await DbContext.AncClassifierMappings.FirstOrDefaultAsync(m => m.AncClassifierId == 0);
+        if (mapping == null)
+        {
+            NavigationManager.NavigateTo("/");
+        }
     }
 
     private async Task SaveClassifier()
     {
-        Console.WriteLine($"{selectedClassifier[0]} {multiplier}");
+        DbContext.AncClassifierMappings.Entry(mapping).CurrentValues.SetValues(mapping with { AncClassifierId = selectedClassifier[0], Multiplier = multiplier });
+        await DbContext.SaveChangesAsync();
         selectedClassifier[0] = 0;
         multiplier = 1000;
+        query = null;
+        await LoadUnmappedMapping();
     }
 
     private async Task RefreshClassifiers()
@@ -61,4 +80,10 @@
         await DbContext.SaveChangesAsync();
         await OnInitializedAsync();
     }
+
+    private void QueryChanged(ChangeEventArgs obj)
+    {
+        classifiers = dbClassifiers.Where(c => c.Name.Contains(obj.Value as string, StringComparison.InvariantCultureIgnoreCase)).OrderBy(classifier => classifier.Name).ToArray();
+    }
+
 }

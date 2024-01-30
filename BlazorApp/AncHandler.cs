@@ -4,8 +4,13 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Text;
 using System.Collections.Specialized;
+using InvoiceDownloader;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
+using EInvoice;
+using System.Xml.Serialization;
+using System.Xml;
+using Invoice = InvoiceDownloader.Invoice;
 
 namespace BlazorApp
 {
@@ -99,5 +104,44 @@ namespace BlazorApp
             }
         }
 
+        public async Task UploadInvoices(Invoice[] invoices)
+        {
+            int totalProductsToUpload = 0;
+            int index = 0;
+            foreach (var invoice in invoices)
+            {
+                var reader = XmlReader.Create(invoice.XML.ToStream(), new XmlReaderSettings() { ConformanceLevel = ConformanceLevel.Document });
+                var einvoice = new XmlSerializer(typeof(E_Invoice)).Deserialize(reader) as E_Invoice;
+                    foreach (var item in einvoice.Invoice[0].InvoiceItem.InvoiceItemGroup.SelectMany(group => group.ItemEntry))
+                    {
+                        if (product.Definition.AncIngredient.Id != 0)
+                        {
+                            NameValueCollection nvc = new NameValueCollection();
+                            nvc.Add("invoice", invoice.InvoiceNo);
+                            nvc.Add("date", invoice.InvoiceDateTime.ToString("dd.MM.yyyy"));
+                            nvc.Add("vendor", invoice.InvoiceSender);
+                            nvc.Add("vendors_menu", "");
+                            nvc.Add("ingredient", product.Definition.AncIngredient.Id.ToString());
+                            nvc.Add("ingredient_list", "");
+                            nvc.Add("total_price", item.VAT.SumAfterVAT.ToString(""));
+                            nvc.Add("vat", item.VAT.VATRate.ToString());
+                            nvc.Add("amount", product.GetAdjustedAmount());
+                            nvc.Add("deadline", "");
+                            nvc.Add("category", "-");
+                            nvc.Add("category_list", "-");
+                            _cawc.UploadValues(
+                                new Uri("https://www.anckonsult.eu/?class=anc&do=check_dates&method=json"), nvc);
+                            var response = Encoding.UTF8.GetString(_cawc.UploadValues(
+                                new Uri("https://www.anckonsult.eu/?class=product&do=save&method=json"), nvc));
+                            if (!response.Contains("\"ok\":1"))
+                            {
+                                Console.WriteLine(response);
+                                Console.WriteLine(String.Join(", ", nvc.Cast<string>().Select(s => nvc[s])));
+                            }
+                        }
+                        index++;
+                    }
+            }
+        }
     }
 }

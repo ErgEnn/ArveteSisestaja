@@ -29,7 +29,7 @@ public class Downloader((string username, string password) credentials)
                 co.SetLoggingPreference(LogType.Browser, LogLevel.Off);
                 chromeDriver = new ChromeDriver(co);
                 chromeDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-                wait = new WebDriverWait(chromeDriver, TimeSpan.FromHours(1));//.FromSeconds(15));
+                wait = new WebDriverWait(chromeDriver, TimeSpan.FromSeconds(15));//.FromSeconds(15));
             }
 
             void NavigateTo(string url)

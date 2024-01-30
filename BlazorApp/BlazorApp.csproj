@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EInvoice\EInvoice.csproj" />
     <ProjectReference Include="..\InvoiceDownloader\InvoiceDownloader.csproj" />
     <PackageReference Include="Blazor.Bootstrap" Version="1.10.5" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.58" />

@@ -21,6 +21,7 @@ namespace BlazorApp
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Invoice>().HasKey(i => new {i.InvoiceNo, i.InvoiceSender, i.InvoiceDateTime});
+            modelBuilder.Entity<AncClassifierMapping>().HasKey(m => new {m.ProductName});
             base.OnModelCreating(modelBuilder);
         }
     }

@@ -3,6 +3,7 @@ using System;
 using BlazorApp;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorApp.Migrations
 {
     [DbContext(typeof(DbContext))]
-    partial class DbContextModelSnapshot : ModelSnapshot
+    [Migration("20240130133238_4")]
+    partial class _4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
@@ -40,16 +43,16 @@ namespace BlazorApp.Migrations
 
             modelBuilder.Entity("BlazorApp.AncClassifierMapping", b =>
                 {
-                    b.Property<string>("ProductName")
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("AncClassifierId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("ProductName")
+                        .HasColumnType("TEXT");
 
                     b.Property<decimal?>("Multiplier")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("ProductName");
+                    b.HasKey("AncClassifierId", "ProductName");
 
                     b.ToTable("AncClassifierMappings");
                 });

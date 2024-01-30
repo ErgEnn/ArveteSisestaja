@@ -5,10 +5,14 @@
 @using DbContext = BlazorApp.DbContext
 @using System.Xml
 @using System.Xml.Serialization
+@using EInvoice
+@using Invoice = InvoiceDownloader.Invoice
+@using System.Text.RegularExpressions
 
 @inject DbContext DbContext
 @inject Downloader Downloader
 @inject NavigationManager NavigationManager
+@inject AncHandler AncHandler
 
 <PageTitle>Arved</PageTitle>
 
@@ -58,18 +62,40 @@
     private async Task ToAnc()
     {
         var invoices = await DbContext.Invoices.Where(invoice => invoice.InvoiceDateTime >= startDate && invoice.InvoiceDateTime <= endDate).ToArrayAsync();
-        var existingMappings = await DbContext.AncClassifierMappings.ToArrayAsync();
+        var existingMappings = await DbContext.AncClassifierMappings.ToListAsync();
+        var hasNonMapped = false;
         foreach (var invoice in invoices)
         {
             var reader = XmlReader.Create(invoice.XML.ToStream(), new XmlReaderSettings() {ConformanceLevel = ConformanceLevel.Document});
-            var einvoice = new XmlSerializer(typeof(EInvoice.E_Invoice)).Deserialize(reader) as EInvoice.E_Invoice;
-            foreach (var item in einvoice.Invoice.InvoiceItem.InvoiceItemGroup)
+            var einvoice = new XmlSerializer(typeof(E_Invoice)).Deserialize(reader) as E_Invoice;
+            foreach (var item in einvoice.Invoice[0].InvoiceItem.InvoiceItemGroup.SelectMany(group => group.ItemEntry))
             {
                 var productName = item.Description.ReplaceLineEndings("");
+                productName = new Regex("[0-3]?\\d\\.[0-1]\\d\\.20\\d\\d").Replace(productName, "");
+                var mapping = existingMappings.SingleOrDefault(mapping => mapping.ProductName == productName);
+                if (mapping is null)
+                {
+                    var entity = new AncClassifierMapping(0, productName, null);
+                    DbContext.AncClassifierMappings.Add(entity);
+                    existingMappings.Add(entity);
+                    hasNonMapped = true;
+                    continue;
+                }
+
+                if (mapping.AncClassifierId == 0)
+                    hasNonMapped = true;
 
             }
         }
-        NavigationManager.NavigateTo("/defineClassifier");
+
+        await DbContext.SaveChangesAsync();
+        if (hasNonMapped)
+        {
+            NavigationManager.NavigateTo("/defineClassifier");
+            return;
+        }
+
+        await AncHandler.UploadInvoices(invoices);
     }
 
     private async Task LoadInvoices()
