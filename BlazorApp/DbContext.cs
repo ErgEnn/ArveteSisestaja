@@ -9,20 +9,14 @@ namespace BlazorApp
         public DbSet<AncClassifier> AncClassifiers { get; set; }
         public DbSet<AncClassifierMapping> AncClassifierMappings { get; set; }
 
-        public DbContext()
-        {
-            
-        }
-
         public DbContext(DbContextOptions options) : base(options)
         {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Invoice>().HasKey(i => new {i.InvoiceNo, i.InvoiceSender, i.InvoiceDateTime});
+            modelBuilder.Entity<Invoice>().HasKey(i => new {i.InvoiceNo, i.InvoiceSender, InvoiceDateTime = i.InvoiceDate});
             modelBuilder.Entity<AncClassifierMapping>().HasKey(m => new {m.ProductName});
-            base.OnModelCreating(modelBuilder);
         }
     }
 }

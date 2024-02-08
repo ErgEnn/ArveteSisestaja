@@ -1,5 +1,6 @@
 using BlazorApp.Components;
 using InvoiceDownloader;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace BlazorApp
@@ -16,6 +17,8 @@ namespace BlazorApp
 
             builder.Services.AddBlazorBootstrap();
 
+            builder.Services.AddDbContextFactory<DbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DB")));
+
             builder.Services.Configure<AncOptions>(builder.Configuration.GetSection("Anc"));
             builder.Services.Configure<OmnivaOptions>(builder.Configuration.GetSection("Omniva"));
             builder.Services.AddSingleton<AncHandler>();
@@ -24,7 +27,7 @@ namespace BlazorApp
                 var options = provider.GetRequiredService<IOptions<OmnivaOptions>>();
                 return new Downloader((options.Value.Username, options.Value.Password));
             });
-            builder.Services.AddSqlite<DbContext>(builder.Configuration.GetConnectionString("DB"));
+            
 
             var app = builder.Build();
 

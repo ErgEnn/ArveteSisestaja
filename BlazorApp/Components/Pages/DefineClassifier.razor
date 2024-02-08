@@ -6,12 +6,13 @@
 @inject DbContext DbContext
 @inject AncHandler AncHandler
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
 
 <div style="display:flex; flex-direction: column">
-    <h2>Toote nimi: @mapping.ProductName</h2>
+    <h2>Toote nimi: @mapping?.ProductName</h2>
     <h3>Kogus arvel: ???</h3>
-    <input @bind="@query" @oninput="@QueryChanged"/>
-    <select multiple="multiple" style="height:1000px" @bind="@selectedClassifier">
+    <input @bind="@query" @oninput="@QueryChanged" @onkeypress="QueryKeyPress"/>
+    <select multiple="multiple" style="height:1000px" @bind="@selectedClassifier" @onkeypress="SelectKeyPress">
         @foreach (var classifier in classifiers)
         {
             <option value="@classifier.Id">@classifier.Name</option>
@@ -25,7 +26,7 @@
     {
         <label class="form-label" style="margin-top: 1em">Sisesta toote kogus tükkides</label>
     }
-    <NumberInput TValue="int" @bind-Value="@multiplier"></NumberInput>
+    <NumberInput TValue="int" @bind-Value="@multiplier" @onkeypress="MultiplierKeyPress"></NumberInput>
     <button class="btn btn-primary" style="margin-top: 1em" @onclick="SaveClassifier">Salvesta</button>
     <button class="btn" style="margin-top: 5em"@onclick="RefreshClassifiers">Värskenda ANC kaupade nimekirja</button>
 </div>
@@ -33,8 +34,8 @@
 
 
 @code {
-    private AncClassifier[] dbClassifiers = new AncClassifier[0];
-    private AncClassifier[] classifiers = new AncClassifier[0];
+    private List<AncClassifier> dbClassifiers = new ();
+    private List<AncClassifier> classifiers = new ();
     private int[] selectedClassifier = new int[1];
     private int multiplier = 1000;
     private AncClassifierMapping? mapping;
@@ -42,7 +43,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        dbClassifiers = await DbContext.AncClassifiers.OrderBy(classifier => classifier.Name).ToArrayAsync();
+        dbClassifiers = await DbContext.AncClassifiers.OrderBy(classifier => classifier.Name).ToListAsync();
+        dbClassifiers.Add(new AncClassifier(-1, "!!!ÄRA SISESTA ANCsse!!!", "", 0));
         classifiers = dbClassifiers;
         await LoadUnmappedMapping();
     }
@@ -58,11 +60,12 @@
 
     private async Task SaveClassifier()
     {
-        DbContext.AncClassifierMappings.Entry(mapping).CurrentValues.SetValues(mapping with { AncClassifierId = selectedClassifier[0], Multiplier = multiplier });
+        DbContext.AncClassifierMappings.Entry(mapping).CurrentValues.SetValues(mapping with { AncClassifierId = selectedClassifier[0], Multiplier = dbClassifiers.Single(c => c.Id == selectedClassifier[0]).Unit == "kg" ? multiplier : multiplier*1000});
         await DbContext.SaveChangesAsync();
         selectedClassifier[0] = 0;
         multiplier = 1000;
-        query = null;
+        query = "";
+        QueryChanged(new ChangeEventArgs(){Value = ""});
         await LoadUnmappedMapping();
     }
 
@@ -83,7 +86,31 @@
 
     private void QueryChanged(ChangeEventArgs obj)
     {
-        classifiers = dbClassifiers.Where(c => c.Name.Contains(obj.Value as string, StringComparison.InvariantCultureIgnoreCase)).OrderBy(classifier => classifier.Name).ToArray();
+        classifiers = dbClassifiers.Where(c => c.Name.Contains(obj.Value as string, StringComparison.InvariantCultureIgnoreCase)).OrderBy(classifier => classifier.Name).ToList();
+    }
+
+    private void SelectKeyPress(KeyboardEventArgs obj)
+    {
+        if (obj.Key == "Enter")
+        {
+            JsRuntime.InvokeVoidAsync("moveFocus");
+        }
+    }
+
+    private void QueryKeyPress(KeyboardEventArgs obj)
+    {
+        if (obj.Key == "Enter")
+        {
+            JsRuntime.InvokeVoidAsync("moveFocus");
+        }
+    }
+
+    private void MultiplierKeyPress(KeyboardEventArgs obj)
+    {
+        if (obj.Key == "Enter")
+        {
+            JsRuntime.InvokeVoidAsync("moveFocus");
+        }
     }
 
 }

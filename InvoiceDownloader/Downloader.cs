@@ -1,7 +1,6 @@
 ﻿using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium;
-using System.Globalization;
 using System.Text.RegularExpressions;
 using InvoiceDownloader.Helpers;
 using InvoiceDownloader.Omniva;
@@ -49,6 +48,7 @@ public class Downloader((string username, string password) credentials)
             {
                 wait.Until(ExpectedConditions.ElementToBeClickable(() => InvoiceSearchComponent.InvoicesSubmenuLink));
                 chromeDriver.FindElement(InvoiceSearchComponent.InvoicesSubmenuLink).Click();
+                Thread.Sleep(500);
                 chromeDriver.Navigate().GoToUrl("https://finance.omniva.eu/finance/main");
             }
 
