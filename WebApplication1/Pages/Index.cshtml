@@ -1,0 +1,42 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+
+<div id="page" class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto bg-white shadow-md min-h-screen p-5">
+        <button 
+            class="bg-green-500 w-full p-2 text-white rounded hover:bg-green-600"
+            hx-get
+            hx-page="DateSelection"
+            hx-swap="outerHTML"
+            hx-target="#default-modal"
+        >Alusta arvete töötlemist</button>
+        <div class="w-full mt-7 mb-4"><h2 class="font-thin text-3xl text-center">Süsteemis olevad arved</h2></div>
+        <table class="mx-auto w-2/3">
+            <thead class="font-regular border-b-2">
+            <tr class="text-left">
+            <tr class="text-left">
+                <th class="py-4 px-6">Arve nr</th>
+                <th>Saatja</th>
+                    <th class="text-right px-6">Kuupäev</th>
+                <th class="text-right px-6">Staatus</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var invoice in Model.Invoices)
+            {
+                <tr class="border-b border-dashed last:border-b-0 hover:bg-gray-100">
+                    <td class="py-4 px-6">@invoice.InvoiceNo</td>
+                    <td>@invoice.InvoiceSender</td>
+                        <td class="text-right px-6">@invoice.InvoiceDate.ToString("dd.MM.yyyy")</td>
+                        <td class="text-right px-6"><span class="text-xs font-semibold text-green-500 border-2 rounded border-green-500 py-1 px-2">ANCsse kantud</span></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="default-modal" class="opacity-0"></div>

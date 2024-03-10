@@ -16,38 +16,51 @@
 
 <PageTitle>Arved</PageTitle>
 
-<div style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 1em">
-    <button class="btn btn-primary" @onclick="LoadInvoices">Värskenda arved</button>
-    <div style="display:flex; flex-direction: row">
-        <DateInput TValue="DateOnly" @bind-Value="@startDate" Placeholder="Algus kuupäev" ></DateInput>
-        <DateInput TValue="DateOnly" @bind-Value="@endDate" Placeholder="Lõpp kuupäev"></DateInput>
-        <button class="btn btn-primary" @onclick="ToAnc">Lae arved ANCsse</button>
+<div class="flex items-center">
+    <div class="flex flex-column">
+        <button>Alusta arvete töötlemist</button>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Arve nr</th>
+                <th>Saatja</th>
+                <th>Kuupäev</th>
+                <th>Staatus</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var invoice in invoices)
+            {
+                <tr>
+                    <td>@invoice.invoice.InvoiceNo</td>
+                    <td>@invoice.invoice.InvoiceSender</td>
+                    <td>@invoice.invoice.InvoiceDate.ToString("dd.MM.yyyy")</td>
+                    <td>@invoice.status</td>
+                </tr>
+            }
+            </tbody>
+
+        </table>
     </div>
+    
+
+    <!--
+        <div style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 1em">
+        <button class="btn btn-primary" @onclick="LoadInvoices">Värskenda arved</button>
+        <div style="display:flex; flex-direction: row">
+            <DateInput TValue="DateOnly" @bind-Value="@startDate" Placeholder="Algus kuupäev" ></DateInput>
+            <DateInput TValue="DateOnly" @bind-Value="@endDate" Placeholder="Lõpp kuupäev"></DateInput>
+            <button class="btn btn-primary" @onclick="ToAnc">Lae arved ANCsse</button>
+        </div>
+    </div>
+    -->
+    
+
+
+    
 </div>
 
 
-<table class="table">
-    <thead>
-    <tr>
-        <th>Arve nr</th>
-        <th>Saatja</th>
-        <th>Kuupäev</th>
-        <th>Staatus</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var invoice in invoices)
-    {
-        <tr>
-            <td>@invoice.invoice.InvoiceNo</td>
-            <td>@invoice.invoice.InvoiceSender</td>
-            <td>@invoice.invoice.InvoiceDate.ToString("dd.MM.yyyy")</td>
-            <td>@invoice.status</td>
-        </tr>
-    }
-    </tbody>
-
-</table>
 
 @code {
     private (Invoice invoice, string status)[] invoices = Array.Empty<(Invoice invoice, string status)>();

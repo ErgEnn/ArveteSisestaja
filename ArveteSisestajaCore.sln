@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorApp", "BlazorApp\Blaz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EInvoice", "EInvoice\EInvoice.csproj", "{6B84D2B0-D156-4728-BD1E-3E340CC246B4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{22896958-1918-4D01-AA0E-73D3ED5F1D8A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{6B84D2B0-D156-4728-BD1E-3E340CC246B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B84D2B0-D156-4728-BD1E-3E340CC246B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B84D2B0-D156-4728-BD1E-3E340CC246B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22896958-1918-4D01-AA0E-73D3ED5F1D8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22896958-1918-4D01-AA0E-73D3ED5F1D8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22896958-1918-4D01-AA0E-73D3ED5F1D8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22896958-1918-4D01-AA0E-73D3ED5F1D8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
