@@ -8,21 +8,28 @@
 @using EInvoice
 @using Invoice = InvoiceDownloader.Invoice
 @using System.Text.RegularExpressions
+@using System.IO.Compression
 
 @inject DbContext DbContext
 @inject Downloader Downloader
 @inject NavigationManager NavigationManager
 @inject AncHandler AncHandler
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Arved</PageTitle>
 
 <div style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 1em">
-    <button class="btn btn-primary" @onclick="LoadInvoices">Värskenda arved</button>
+    <button class="btn btn-primary" disabled=@IsInProgress @onclick="LoadInvoices">Värskenda arved</button>
+    <button class="btn btn-primary" disabled=@IsInProgress @onclick="ProcessPria">PRIA</button>
     <div style="display:flex; flex-direction: row">
         <DateInput TValue="DateOnly" @bind-Value="@startDate" Placeholder="Algus kuupäev" ></DateInput>
         <DateInput TValue="DateOnly" @bind-Value="@endDate" Placeholder="Lõpp kuupäev"></DateInput>
         <button class="btn btn-primary" @onclick="ToAnc">Lae arved ANCsse</button>
     </div>
+</div>
+
+<div style="display:flex; flex-direction: row">
+    <progress value="@progressPercentage" max="100" style="width:100%"></progress>
 </div>
 
 
@@ -50,6 +57,8 @@
 </table>
 
 @code {
+    int progressPercentage = 0;
+    bool IsInProgress = false;
     private (Invoice invoice, string status)[] invoices = Array.Empty<(Invoice invoice, string status)>();
     private DateOnly startDate = DateOnly.FromDateTime(new DateTime(2024,01,01));
     private DateOnly endDate = DateOnly.FromDateTime(DateTime.Today);
@@ -75,7 +84,7 @@
         {
             var reader = XmlReader.Create(invoice.XML.ToStream(), new XmlReaderSettings() {ConformanceLevel = ConformanceLevel.Document});
             var einvoice = new XmlSerializer(typeof(E_Invoice)).Deserialize(reader) as E_Invoice;
-            foreach (var item in einvoice.Invoice[0].InvoiceItem.InvoiceItemGroup.SelectMany(group => group.ItemEntry))
+            foreach (var item in einvoice.Invoice.Single().InvoiceItem.InvoiceItemGroup.SelectMany(group => group.ItemEntry))
             {
                 var productName = item.Description.ReplaceLineEndings("");
                 productName = new Regex("[0-3]?\\d\\.[0-1]\\d\\.20\\d\\d").Replace(productName, "");
@@ -105,11 +114,18 @@
         var alreadyUploaded = await AncHandler.GetInvoicesInANC(startDate, endDate);
         var toBeUploaded = invoices.ExceptBy(alreadyUploaded, invoice => (invoice.InvoiceNo.ToUpper(), invoice.InvoiceDate, invoice.InvoiceSender)).ToArray();
         await AncHandler.UploadInvoices(toBeUploaded);
+        NavigationManager.NavigateTo("/");
     }
 
     private async Task LoadInvoices()
     {
-        var downloadInvoices = await Downloader.DownloadInvoices(startDate, endDate);
+        IsInProgress = true;
+        var progress = new Progress<(int, int)>(tuple =>
+        {
+            progressPercentage = (int)(tuple.Item1 / (float)tuple.Item2 * 100);
+            InvokeAsync(StateHasChanged);
+        });
+        var downloadInvoices = await Downloader.DownloadInvoices(startDate, endDate, progress);
         foreach (var invoice in downloadInvoices)
         {
             Console.WriteLine($"{invoice.InvoiceNo} {invoice.InvoiceSender} {invoice.InvoiceDate}");
@@ -120,8 +136,86 @@
                 .Any(existingInvoice => 
                     newInvoice.InvoiceNo == existingInvoice.InvoiceNo 
                     && newInvoice.InvoiceSender == existingInvoice.InvoiceSender));
+
+        foreach (var invoice in newInvoices)
+        {
+            if (invoice.XML is {Length: < 100} xml)
+                continue;
+            var reader = XmlReader.Create(invoice.XML.ToStream(), new XmlReaderSettings() {ConformanceLevel = ConformanceLevel.Document});
+            var einvoice = new XmlSerializer(typeof(E_Invoice)).Deserialize(reader) as E_Invoice;
+            var innerInvoice = einvoice.Invoice.Single();
+            if (innerInvoice.InvoiceInformation.InvoiceDate != invoice.InvoiceDate.ToDateTime(TimeOnly.MinValue))
+                throw new Exception("Mismatch");
+            if (innerInvoice.InvoiceInformation.InvoiceNumber != invoice.InvoiceNo)
+                throw new Exception("Mismatch");
+            if (innerInvoice.InvoiceParties.SellerParty.Name != invoice.InvoiceSender)
+                throw new Exception("Mismatch");
+        }
+
         await DbContext.Invoices.AddRangeAsync(newInvoices);
         await DbContext.SaveChangesAsync();
+        IsInProgress = false;
         await OnInitializedAsync();
+    }
+
+    private async Task ProcessPria()
+    {
+        var invoices = await DbContext.Invoices.Where(invoice => invoice.InvoiceDate >= startDate && invoice.InvoiceDate <= endDate).ToArrayAsync();
+        var matchedInvoiceTasks = invoices.Select(async invoice =>
+        {
+            var reader = XmlReader.Create(invoice.XML.ToStream(), new XmlReaderSettings() {ConformanceLevel = ConformanceLevel.Document});
+            var einvoice = new XmlSerializer(typeof(E_Invoice)).Deserialize(reader) as E_Invoice;
+            var pdf = invoice.Pdf;
+            var hadMatches = false;
+            foreach (var item in einvoice.Invoice.Single().InvoiceItem.InvoiceItemGroup.SelectMany(group => group.ItemEntry))
+            {
+                var mapping = await GetMapping(item);
+                if (mapping is {AncClassifierId: 60796})
+                {
+                    pdf = PdfHighlighter.PdfHighlighter.HighlightTextInPdf(pdf, item.Description);
+                    hadMatches = true;
+                }
+            }
+
+            if (!hadMatches)
+                return null;
+            return invoice with {Pdf = pdf};
+        }).ToArray();
+        var matchedInvoices = (await Task.WhenAll(matchedInvoiceTasks)).Where(invoice => invoice is {});
+        var zip = CreateZipArchive(matchedInvoices.ToDictionary(invoice => $"{invoice.InvoiceDate:yyyy-MM-dd}_{invoice.InvoiceSender}_{invoice.InvoiceNo}.pdf", invoice => invoice.Pdf));
+        await JSRuntime.InvokeVoidAsync("downloadFileFromByteArray", "downloadedFiles.zip", zip);
+    }
+
+    byte[] CreateZipArchive(Dictionary<string, byte[]> files)
+    {
+        using (var memoryStream = new MemoryStream())
+        {
+            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+            {
+                foreach (var fileEntry in files)
+                {
+                    var zipEntry = archive.CreateEntry(fileEntry.Key, CompressionLevel.Fastest);
+                    using (var zipEntryStream = zipEntry.Open())
+                    {
+                        zipEntryStream.Write(fileEntry.Value, 0, fileEntry.Value.Length);
+                    }
+                }
+            }
+            return memoryStream.ToArray();
+        }
+    }
+
+    private async Task<AncClassifierMapping?> GetMapping(ItemEntry item)
+    {
+        var existingMappings = await DbContext.AncClassifierMappings.ToListAsync();
+        return existingMappings.SingleOrDefault(mapping => mapping.ProductName == GetSanitizedProductName(item));
+    }
+
+    private string GetSanitizedProductName(ItemEntry item)
+    {
+        var productName = item.Description;
+        productName = productName.ReplaceLineEndings("");
+        productName = new Regex("[0-3]?\\d\\.[0-1]\\d\\.20\\d\\d").Replace(productName, "");
+        return productName;
     }
 }

@@ -1,20 +1,30 @@
-﻿using OpenQA.Selenium.Chrome;
+﻿using System.Net;
+using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium;
 using System.Text.RegularExpressions;
 using InvoiceDownloader.Helpers;
 using InvoiceDownloader.Omniva;
+using Cookie = System.Net.Cookie;
+using System.Xml.Serialization;
+using System.Xml;
+using EInvoice;
 
 namespace InvoiceDownloader;
 
-public class Downloader((string username, string password) credentials)
+public class Downloader((string username, string password) credentials, bool headless = true, int timeoutsInSec = 10)
 {
-    public async Task<IReadOnlyCollection<Invoice>> DownloadInvoices(DateOnly from, DateOnly to)
+    public async Task<IReadOnlyCollection<Invoice>> DownloadInvoices(DateOnly from, DateOnly to, IProgress<(int progress,int total)> progress)
     {
-        return await Task.Run(() =>
+        return await Task.Run(async () =>
         {
             ChromeDriver chromeDriver = null;
             WebDriverWait wait;
+            CookieContainer cookieContainer = new CookieContainer();
+            HttpClient httpClient = new HttpClient(new HttpClientHandler(){CookieContainer = cookieContainer});
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36");
+            httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8");
+            httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, br");
 
             void InitChrome()
             {
@@ -23,12 +33,13 @@ public class Downloader((string username, string password) credentials)
                     BinaryLocation = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
                 };
                 co.AddArgument("--disable-gpu");
-                co.AddArgument("--headless=new");
+                if(headless)
+                    co.AddArgument("--headless=new");
                 co.SetLoggingPreference(LogType.Driver, LogLevel.Off);
                 co.SetLoggingPreference(LogType.Browser, LogLevel.Off);
                 chromeDriver = new ChromeDriver(co);
-                chromeDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-                wait = new WebDriverWait(chromeDriver, TimeSpan.FromSeconds(15));//.FromSeconds(15));
+                chromeDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(timeoutsInSec);
+                wait = new WebDriverWait(chromeDriver, TimeSpan.FromSeconds(timeoutsInSec));
             }
 
             void NavigateTo(string url)
@@ -38,6 +49,8 @@ public class Downloader((string username, string password) credentials)
 
             void LogIn()
             {
+                wait.Until(ExpectedConditions.ElementExists(()=>LoginPage.UserPassAuthMethodTab));
+                chromeDriver.FindElement(LoginPage.UserPassAuthMethodTab).Click();
                 wait.Until(ExpectedConditions.ElementExists(()=>LoginPage.Username));
                 chromeDriver.FindElement(LoginPage.Username).SendKeys(credentials.username); // Enter username
                 chromeDriver.FindElement(LoginPage.Password).SendKeys(credentials.password); // Enter password
@@ -102,10 +115,11 @@ public class Downloader((string username, string password) credentials)
                 FillSearchForm();
                 WaitLoading();
                 int amount = GetInvoicesCount();
+                progress.Report((0,amount));
                 Console.WriteLine("Arveid: " + amount);
                 NavigateToFirstInvoice();
 
-                List<Invoice> invoices = new ();
+                List<Invoice> invoices = new (amount);
                 IWebElement? nextBtn;
                 do
                 {
@@ -127,39 +141,53 @@ public class Downloader((string username, string password) credentials)
                         var invoiceDateStr = InvoicePage.InvoiceDate.FindElement(chromeDriver)!.Text.Trim();
                         var invoiceDate = DateOnly.ParseExact(invoiceDateStr, "dd.MM.yyyy");
                         var invoiceSender = InvoicePage.InvoiceSender.FindElement(chromeDriver)!.Text.Trim();
-                        var pdfSrc = InvoicePage.InvoicePDF.FindElement(chromeDriver)!.GetAttribute("src");
+                        var pdfSrc = InvoicePage.InvoiceAttachmentEmbed.FindElement(chromeDriver)!.GetAttribute("src");
+
+                        foreach (var cookie in chromeDriver.Manage().Cookies.AllCookies)
+                        {
+                            cookieContainer.Add(new Uri(pdfSrc),new Cookie(cookie.Name, cookie.Value));
+                        }
+
+                        byte[] pdfBytes = await httpClient.GetByteArrayAsync(pdfSrc);
 
                         var secondAttachment = chromeDriver.FindElement(InvoicePage.SecondAttachmentTab);
+                        string xml = null;
                         if (secondAttachment != null)
                         {
                             secondAttachment.Click();
-                            wait.Until(ExpectedConditions.FrameToBeAvailableAndSwitchToIt(() =>
-                                InvoicePage.SecondAttachmentIFrame));
+                            Thread.Sleep(250);
                             try
                             {
-                                var xml = (string)chromeDriver.ExecuteScript("return document.body.innerText");
-                                invoices.Add(new Invoice(invoiceNo, invoiceSender, invoiceDate, xml, pdfSrc));
-                            }
-                            catch (Exception e)
-                            {
-                                invoices.Add(new Invoice(invoiceNo, invoiceSender, invoiceDate, null, pdfSrc));
-                                Console.WriteLine("Ei suutnud laadida arve XMLi.");
-                                Console.WriteLine(e);
-                            }
+                                var xmlSrc =
+                                    InvoicePage.InvoiceAttachmentIframe.FindElement(chromeDriver)!.GetAttribute("src");
+                                xml = await httpClient.GetStringAsync(xmlSrc);
 
-                            chromeDriver.SwitchTo().ParentFrame();
+                                var reader = XmlReader.Create(xml.ToStream(),
+                                    new XmlReaderSettings() {ConformanceLevel = ConformanceLevel.Document});
+                                var einvoice = new XmlSerializer(typeof(E_Invoice)).Deserialize(reader) as E_Invoice;
+                                var innerInvoice = einvoice.Invoice.Single();
+                                if (innerInvoice.InvoiceInformation.InvoiceNumber != invoiceNo)
+                                    throw new Exception("Mismatch");
+                                if (innerInvoice.InvoiceInformation.InvoiceDate !=
+                                    invoiceDate.ToDateTime(TimeOnly.MinValue))
+                                    throw new Exception("Mismatch");
+                                if (innerInvoice.InvoiceParties.SellerParty.Name != invoiceSender)
+                                    throw new Exception("Mismatch");
+                            }
+                            catch (Exception _)
+                            {
+                                xml = null;
+                            }
                         }
-                        else
-                        {
-                            invoices.Add(new Invoice(invoiceNo, invoiceSender, invoiceDate, null, pdfSrc));
-                        }
+
+                        invoices.Add(new Invoice(invoiceNo, invoiceSender, invoiceDate, xml, pdfBytes));
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine(e);
                         Console.WriteLine("Ei suutnud laadida arvet.");
                     }
-
+                    progress.Report((invoices.Count, amount));
                     while (true)
                     {
                         try
