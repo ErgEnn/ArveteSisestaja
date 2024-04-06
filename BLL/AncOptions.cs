@@ -1,4 +1,4 @@
-﻿namespace BlazorApp
+﻿namespace BLL
 {
     public class AncOptions
     {

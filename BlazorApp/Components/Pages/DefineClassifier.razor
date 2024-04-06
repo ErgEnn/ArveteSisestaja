@@ -1,9 +1,10 @@
 ﻿@page "/defineClassifier"
 @rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
-@using DbContext = BlazorApp.DbContext
+@using DbContext = BLL.AppDbContext
+@using BLL
 
-@inject DbContext DbContext
+@inject DbContext AppDbContext
 @inject AncHandler AncHandler
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JsRuntime
@@ -43,7 +44,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        dbClassifiers = await DbContext.AncClassifiers.OrderBy(classifier => classifier.Name).ToListAsync();
+        dbClassifiers = await AppDbContext.AncClassifiers.OrderBy(classifier => classifier.Name).ToListAsync();
         dbClassifiers.Add(new AncClassifier(-1, "!!!ÄRA SISESTA ANCsse!!!", "", 0));
         classifiers = dbClassifiers;
         await LoadUnmappedMapping();
@@ -51,7 +52,7 @@
 
     private async Task LoadUnmappedMapping()
     {
-        mapping = await DbContext.AncClassifierMappings.FirstOrDefaultAsync(m => m.AncClassifierId == 0);
+        mapping = await AppDbContext.AncClassifierMappings.FirstOrDefaultAsync(m => m.AncClassifierId == 0);
         if (mapping == null)
         {
             NavigationManager.NavigateTo("/");
@@ -60,8 +61,8 @@
 
     private async Task SaveClassifier()
     {
-        DbContext.AncClassifierMappings.Entry(mapping).CurrentValues.SetValues(mapping with { AncClassifierId = selectedClassifier[0], Multiplier = dbClassifiers.Single(c => c.Id == selectedClassifier[0]).Unit == "kg" ? multiplier : multiplier*1000});
-        await DbContext.SaveChangesAsync();
+        AppDbContext.AncClassifierMappings.Entry(mapping).CurrentValues.SetValues(mapping with { AncClassifierId = selectedClassifier[0], Multiplier = dbClassifiers.Single(c => c.Id == selectedClassifier[0]).Unit == "kg" ? multiplier : multiplier*1000});
+        await AppDbContext.SaveChangesAsync();
         selectedClassifier[0] = 0;
         multiplier = 1000;
         query = "";
@@ -72,15 +73,15 @@
     private async Task RefreshClassifiers()
     {
         var classifiers = await AncHandler.GetAncClassifiers();
-        var existingClassifiers = await DbContext.AncClassifiers.ToArrayAsync();
+        var existingClassifiers = await AppDbContext.AncClassifiers.ToArrayAsync();
         foreach (var classifier in classifiers)
         {
             if (existingClassifiers.FirstOrDefault(ec => ec.Id == classifier.Id) is { })
                 continue;
             else
-                DbContext.AncClassifiers.Add(classifier);
+                AppDbContext.AncClassifiers.Add(classifier);
         }
-        await DbContext.SaveChangesAsync();
+        await AppDbContext.SaveChangesAsync();
         await OnInitializedAsync();
     }
 

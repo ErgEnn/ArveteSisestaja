@@ -1,27 +1,26 @@
-﻿using HtmlAgilityPack;
-using Newtonsoft.Json;
-using System.Net;
-using System.Text.RegularExpressions;
-using System.Text;
-using System.Collections.Specialized;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Options;
-using EInvoice;
-using System.Xml.Serialization;
-using System.Xml;
-using Microsoft.EntityFrameworkCore;
-using Invoice = InvoiceDownloader.Invoice;
+﻿using System.Collections.Specialized;
 using System.Globalization;
+using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Serialization;
+using EInvoice;
+using HtmlAgilityPack;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Invoice = InvoiceDownloader.Invoice;
 
-namespace BlazorApp
+namespace BLL
 {
     public class AncHandler
     {
         private readonly IOptions<AncOptions> _options;
-        private readonly IDbContextFactory<DbContext> _dbContextFactory;
+        private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
         private CookieAwareWebClient _cawc = new();
 
-        public AncHandler(IOptions<AncOptions> options, IDbContextFactory<DbContext> dbContextFactory)
+        public AncHandler(IOptions<AncOptions> options, IDbContextFactory<AppDbContext> dbContextFactory)
         {
             _options = options;
             _dbContextFactory = dbContextFactory;
@@ -35,7 +34,7 @@ namespace BlazorApp
             string response = Encoding.UTF8.GetString(await _cawc.UploadValuesTaskAsync("https://www.anckonsult.eu/?class=user&do=login&method=json", new NameValueCollection() { { "uid", _options.Value.Username }, { "password", _options.Value.Password } }));
             await _cawc.DownloadDataTaskAsync("https://www.anckonsult.eu");
             if (!response.Contains("{\"ok\":1"))
-                throw new AuthenticationFailureException($"ANC Response: {response}");
+                throw new Exception($"ANC Response: {response}");
         }
 
         private async Task<bool> IsLoggedIn()

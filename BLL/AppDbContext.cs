@@ -1,15 +1,15 @@
 ﻿using InvoiceDownloader;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorApp
+namespace BLL
 {
-    public class DbContext : Microsoft.EntityFrameworkCore.DbContext
+    public class AppDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<AncClassifier> AncClassifiers { get; set; }
         public DbSet<AncClassifierMapping> AncClassifierMappings { get; set; }
 
-        public DbContext(DbContextOptions options) : base(options)
+        public AppDbContext(DbContextOptions options) : base(options)
         {
         }
 

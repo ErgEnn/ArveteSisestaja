@@ -2,18 +2,18 @@
 @rendermode InteractiveServer
 @using InvoiceDownloader
 @using Microsoft.EntityFrameworkCore
-@using DbContext = BlazorApp.DbContext
 @using System.Xml
 @using System.Xml.Serialization
 @using EInvoice
 @using Invoice = InvoiceDownloader.Invoice
 @using System.Text.RegularExpressions
-@using System.IO.Compression
+@using BLL
 
-@inject DbContext DbContext
+@inject AppDbContext AppDbContext
 @inject Downloader Downloader
 @inject NavigationManager NavigationManager
 @inject AncHandler AncHandler
+@inject PriaReportService PriaReportService;
 @inject IJSRuntime JSRuntime
 
 <PageTitle>Arved</PageTitle>
@@ -65,7 +65,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var omnivaInvoices = await DbContext.Invoices.OrderByDescending(invoice => invoice.InvoiceDate).ToArrayAsync();
+        var omnivaInvoices = await AppDbContext.Invoices.OrderByDescending(invoice => invoice.InvoiceDate).ToArrayAsync();
         var ancInvoices = await AncHandler.GetInvoicesInANC(startDate, endDate);
         invoices = omnivaInvoices.GroupJoin(
             ancInvoices, 
@@ -77,8 +77,8 @@
 
     private async Task ToAnc()
     {
-        var invoices = await DbContext.Invoices.Where(invoice => invoice.InvoiceDate >= startDate && invoice.InvoiceDate <= endDate).ToArrayAsync();
-        var existingMappings = await DbContext.AncClassifierMappings.ToListAsync();
+        var invoices = await AppDbContext.Invoices.Where(invoice => invoice.InvoiceDate >= startDate && invoice.InvoiceDate <= endDate).ToArrayAsync();
+        var existingMappings = await AppDbContext.AncClassifierMappings.ToListAsync();
         var hasNonMapped = false;
         foreach (var invoice in invoices)
         {
@@ -92,7 +92,7 @@
                 if (mapping is null)
                 {
                     var entity = new AncClassifierMapping(0, productName, null);
-                    DbContext.AncClassifierMappings.Add(entity);
+                    AppDbContext.AncClassifierMappings.Add(entity);
                     existingMappings.Add(entity);
                     hasNonMapped = true;
                     continue;
@@ -104,7 +104,7 @@
             }
         }
 
-        await DbContext.SaveChangesAsync();
+        await AppDbContext.SaveChangesAsync();
         if (hasNonMapped)
         {
             NavigationManager.NavigateTo("/defineClassifier");
@@ -130,7 +130,7 @@
         {
             Console.WriteLine($"{invoice.InvoiceNo} {invoice.InvoiceSender} {invoice.InvoiceDate}");
         }
-        var existingInvoices = await DbContext.Invoices.Where(invoice => invoice.InvoiceDate >= startDate && invoice.InvoiceDate <= endDate).ToArrayAsync();
+        var existingInvoices = await AppDbContext.Invoices.Where(invoice => invoice.InvoiceDate >= startDate && invoice.InvoiceDate <= endDate).ToArrayAsync();
         var newInvoices = downloadInvoices
             .Where(newInvoice => !existingInvoices
                 .Any(existingInvoice => 
@@ -152,62 +152,23 @@
                 throw new Exception("Mismatch");
         }
 
-        await DbContext.Invoices.AddRangeAsync(newInvoices);
-        await DbContext.SaveChangesAsync();
+        await AppDbContext.Invoices.AddRangeAsync(newInvoices);
+        await AppDbContext.SaveChangesAsync();
         IsInProgress = false;
         await OnInitializedAsync();
     }
 
     private async Task ProcessPria()
     {
-        var invoices = await DbContext.Invoices.Where(invoice => invoice.InvoiceDate >= startDate && invoice.InvoiceDate <= endDate).ToArrayAsync();
-        var matchedInvoiceTasks = invoices.Select(async invoice =>
-        {
-            var reader = XmlReader.Create(invoice.XML.ToStream(), new XmlReaderSettings() {ConformanceLevel = ConformanceLevel.Document});
-            var einvoice = new XmlSerializer(typeof(E_Invoice)).Deserialize(reader) as E_Invoice;
-            var pdf = invoice.Pdf;
-            var hadMatches = false;
-            foreach (var item in einvoice.Invoice.Single().InvoiceItem.InvoiceItemGroup.SelectMany(group => group.ItemEntry))
-            {
-                var mapping = await GetMapping(item);
-                if (mapping is {AncClassifierId: 60796})
-                {
-                    pdf = PdfHighlighter.PdfHighlighter.HighlightTextInPdf(pdf, item.Description);
-                    hadMatches = true;
-                }
-            }
-
-            if (!hadMatches)
-                return null;
-            return invoice with {Pdf = pdf};
-        }).ToArray();
-        var matchedInvoices = (await Task.WhenAll(matchedInvoiceTasks)).Where(invoice => invoice is {});
-        var zip = CreateZipArchive(matchedInvoices.ToDictionary(invoice => $"{invoice.InvoiceDate:yyyy-MM-dd}_{invoice.InvoiceSender}_{invoice.InvoiceNo}.pdf", invoice => invoice.Pdf));
-        await JSRuntime.InvokeVoidAsync("downloadFileFromByteArray", "downloadedFiles.zip", zip);
+        var zip = await PriaReportService.GenerateReports(startDate, endDate);
+        await JSRuntime.InvokeVoidAsync("downloadFileFromByteArray", $"pria_failid_{startDate:ddMMMyy}_{endDate:ddMMMyy}.zip", zip);
     }
 
-    byte[] CreateZipArchive(Dictionary<string, byte[]> files)
-    {
-        using (var memoryStream = new MemoryStream())
-        {
-            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
-            {
-                foreach (var fileEntry in files)
-                {
-                    var zipEntry = archive.CreateEntry(fileEntry.Key, CompressionLevel.Fastest);
-                    using (var zipEntryStream = zipEntry.Open())
-                    {
-                        zipEntryStream.Write(fileEntry.Value, 0, fileEntry.Value.Length);
-                    }
-                }
-            }
-            return memoryStream.ToArray();
-        }
-    }
+    
 
     private async Task<AncClassifierMapping?> GetMapping(ItemEntry item)
     {
-        var existingMappings = await DbContext.AncClassifierMappings.ToListAsync();
+        var existingMappings = await AppDbContext.AncClassifierMappings.ToListAsync();
         return existingMappings.SingleOrDefault(mapping => mapping.ProductName == GetSanitizedProductName(item));
     }
 

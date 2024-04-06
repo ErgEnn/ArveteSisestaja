@@ -6,8 +6,9 @@ namespace PdfHighlighter;
 
 public class PdfHighlighter
 {
-    public static byte[] HighlightTextInPdf(byte[] pdfContent, params string[] stringsToHighlight)
+    public static byte[] HighlightTextInPdf(byte[] pdfContent, BaseColor color, string stringToHighlight, out int matchesCount)
     {
+        matchesCount = 0;
         using (MemoryStream outputPdfStream = new MemoryStream())
         {
             PdfReader reader = new PdfReader(pdfContent);
@@ -16,19 +17,16 @@ public class PdfHighlighter
                 for (int i = 1; i <= reader.NumberOfPages; i++)
                 {
                     PdfContentByte canvas = stamper.GetOverContent(i);
-                    canvas.SetColorFill(BaseColor.YELLOW);
+                    canvas.SetColorFill(color);
                     canvas.SetGState(new PdfGState { FillOpacity = 0.5f });
 
-                    foreach (var phrase in stringsToHighlight)
+                    var strategy = new CustomTextExtractionStrategy(stringToHighlight);
+                    PdfTextExtractor.GetTextFromPage(reader, i, strategy);
+                    foreach (var rect in strategy.TextLocations)
                     {
-                        var strategy = new CustomTextExtractionStrategy(phrase);
-                        PdfTextExtractor.GetTextFromPage(reader, i, strategy);
-                        foreach (var rect in strategy.TextLocations)
-                        {
-                            canvas.Rectangle(rect.Left, rect.Bottom, rect.Width, rect.Height);
-                            canvas.Fill();
-                        }
-
+                        matchesCount++;
+                        canvas.Rectangle(rect.Left, rect.Bottom, rect.Width, rect.Height);
+                        canvas.Fill();
                     }
                 }
             }

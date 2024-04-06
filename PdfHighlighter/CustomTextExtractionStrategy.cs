@@ -17,7 +17,7 @@ namespace PdfHighlighter
         {
             base.RenderText(renderInfo);
             var txt = renderInfo.GetText();
-            if (txt.Equals(searchText, StringComparison.InvariantCultureIgnoreCase))
+            if (txt.Contains(searchText, StringComparison.InvariantCultureIgnoreCase))
             {
                 Console.WriteLine("Found");
                 var startPosition = renderInfo.GetBaseline().GetStartPoint();
