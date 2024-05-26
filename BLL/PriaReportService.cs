@@ -16,39 +16,71 @@ namespace BLL
             new PriaCategory
             {
                 CategoryName = "piim",
-                Classifiers = [60797, 120821],
-                Color = BaseColor.YELLOW
+                ItemMatcher = item => (new []{ 60797, 120821 }).Contains(item.Mapping.AncClassifierId)
             },
             new PriaCategory
             {
                 CategoryName = "keefir",
-                Classifiers = [60718],
-                Color = BaseColor.BLUE
+                ItemMatcher = item => (new[] { 60718 }).Contains(item.Mapping.AncClassifierId)
             },
             new PriaCategory
             {
                 CategoryName = "maits_jogurt",
-                Classifiers = [60697],
-                Color = BaseColor.PINK
+                ItemMatcher = item => (new[] { 60697 }).Contains(item.Mapping.AncClassifierId)
             },
             new PriaCategory
             {
                 CategoryName = "oun",
-                Classifiers = [60792],
-                Color = BaseColor.RED
+                ItemMatcher = item => (new[] { 60792 }).Contains(item.Mapping.AncClassifierId)
             },
             new PriaCategory
             {
                 CategoryName = "pirn",
-                Classifiers = [60799],
-                Color = BaseColor.GREEN
+                ItemMatcher = item => (new[] { 60799 }).Contains(item.Mapping.AncClassifierId)
             },
             new PriaCategory
             {
                 CategoryName = "marjad",
-                Classifiers = [60773],
-                Color = BaseColor.ORANGE
-            }
+                ItemMatcher = item => (new[] { 60773 }).Contains(item.Mapping.AncClassifierId)
+            },
+            new PriaCategory
+            {
+                CategoryName = "astelpaju",
+                ItemMatcher = item => (new[] { 145296 }).Contains(item.Mapping.AncClassifierId)
+            },
+            new PriaCategory
+            {
+                CategoryName = "kreeka_jogurt",
+                ItemMatcher = item => (new[] { 253325 }).Contains(item.Mapping.AncClassifierId)
+            },
+            new PriaCategory
+            {
+                CategoryName = "paprika",
+                ItemMatcher = item =>
+                {
+                    return (new[] { 60793 }).Contains(item.Mapping.AncClassifierId) 
+                           && item.Invoice.Invoice.InvoiceSender == "TSITRUS KAUBANDUS OÜ";
+                }
+            },
+            new PriaCategory
+            {
+                CategoryName = "redis",
+                ItemMatcher = item => (new[] { 60808 }).Contains(item.Mapping.AncClassifierId)
+            },
+            new PriaCategory
+            {
+                CategoryName = "kurk",
+                ItemMatcher = item => (new[] { 60739 }).Contains(item.Mapping.AncClassifierId)
+            },
+            new PriaCategory
+            {
+                CategoryName = "porgand",
+                ItemMatcher = item =>
+                {
+                    return (new[] { 60802 }).Contains(item.Mapping.AncClassifierId)
+                           && item.Invoice.Invoice.InvoiceSender == "osaühing Lemel RH";
+                }
+            },
         ];
 
         public PriaReportService(
@@ -69,7 +101,7 @@ namespace BLL
             await _ancMapper.MapAncClassifiersToInvoiceItems(invoices);
             MapInvoiceItemsToPriaCategories(invoices);
             var excels = await GenerateExcelsForCategories(startDate, endDate);
-            var pdfs = await _pdfGenerator.GeneratePDFs(invoices);
+            var pdfs = _pdfGenerator.GeneratePDFs(invoices, _priaCategories);
             var files = excels.Union(pdfs).ToDictionary(pair => pair.Key, pair => pair.Value);
             var pdfReport = GeneratePdfDetailsReport(invoices);
             files.Add("pdf_report.txt",pdfReport);
@@ -117,7 +149,7 @@ namespace BLL
             {
                 var xlsx = await _excelReportGenerator.GenerateExcel(category);
                 category.Excel = xlsx;
-                dict.Add($"pria_{category.CategoryName}_{startDate:ddMMMyy}_{endDate:ddMMMyy}.xlsx", xlsx);
+                dict.Add($"pria_{category.CategoryName}_{startDate:ddMMMyy}_{endDate:ddMMMyy}.xlsx", category.Excel);
             }
 
             return dict;
@@ -135,7 +167,7 @@ namespace BLL
         {
             foreach (var category in _priaCategories)
             {
-                if (category.Classifiers.Contains(item.Mapping.AncClassifierId))
+                if (category.ItemMatcher(item))
                 {
                     category.Invoices.Add(item.Invoice);
                     return category;
@@ -149,9 +181,8 @@ namespace BLL
 
     public class PriaCategory
     {
-        public string CategoryName { get; init; }
-        public int[] Classifiers { get; init; }
-        public BaseColor Color { get; init; }
+        public required string CategoryName { get; init; }
+        public required Predicate<MappedInvoice.InvoiceItem> ItemMatcher { get; init; }
 
         public ISet<MappedInvoice> Invoices { get; } = new HashSet<MappedInvoice>();
         public byte[]? Excel { get; set; }

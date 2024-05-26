@@ -2,7 +2,8 @@
 {
     public class PriaPDFGenerator
     {
-        public async Task<IDictionary<string, byte[]>> GeneratePDFs(IReadOnlyCollection<MappedInvoice> invoices)
+        public IDictionary<string, byte[]> GeneratePDFs(IReadOnlyCollection<MappedInvoice> invoices,
+            PriaCategory[] priaCategories)
         {
             var dict = new Dictionary<string, byte[]>();
             foreach (var invoice in invoices)
@@ -14,7 +15,7 @@
                     var needle = priaItemsGrouping.Key;
                     while (needle.Length > 0)
                     {
-                        var higlightedPdf = PdfHighlighter.PdfHighlighter.HighlightTextInPdf(pdf, priaItemsGrouping.First().PriaCategory.Color, needle, out matchesCount);
+                        var higlightedPdf = PdfHighlighter.PdfHighlighter.HighlightTextInPdf(pdf, priaItemsGrouping.First().PriaCategory.CategoryName, needle, out matchesCount);
                         if (matchesCount == 0)
                         {
                             needle = needle.Substring(0, Math.Max(needle.LastIndexOf(' '), 0));
@@ -33,6 +34,8 @@
 
                 if (invoice.Invoice.Pdf != pdf)
                 {
+                    pdf = PdfHighlighter.PdfHighlighter.AddLegendToPdf(pdf,
+                        priaCategories.Select(category => category.CategoryName).ToArray());
                     invoice.AlteredPdf = pdf;
                     dict.Add($"{invoice.Invoice.InvoiceSender}_{invoice.Invoice.InvoiceNo}.pdf", pdf);
                 }

@@ -12,14 +12,16 @@ public class PriaExcelReportGenerator
     public class DataCol
     {
         public string Header { get; }
-        public Func<MappedInvoice.InvoiceItem, object> DataParser { get; }
+        public Func<MappedInvoice.InvoiceItem, object>? DataParser { get; }
         public Func<ExcelRange, string>? FooterFormula { get; }
+        public Func<ExcelCellAddress, string> Formula { get; }
 
-        public DataCol(string header, Func<MappedInvoice.InvoiceItem, object> dataParser, Func<ExcelRange,string>? footerFormula = null)
+        public DataCol(string header, Func<MappedInvoice.InvoiceItem, object>? dataParser, Func<ExcelRange,string>? footerFormula = null, Func<ExcelCellAddress, string> formula = null)
         {
             Header = header;
             DataParser = dataParser;
             FooterFormula = footerFormula;
+            Formula = formula;
         }
     }
 
@@ -28,8 +30,11 @@ public class PriaExcelReportGenerator
         new DataCol("Arve kp   ", item => item.Invoice.Invoice.InvoiceDate.ToString("dd.MM.yyyy")),
         new DataCol("Arve väljastaja", item => item.Invoice.Invoice.InvoiceSender),
         new DataCol("Arve nr     ", item => item.Invoice.Invoice.InvoiceNo),
-        new DataCol("Hind(ilma km.)", item => item.TotalBeforeVat, range => $"=SUM({range.Address})"),
-        new DataCol("Kogus", item => item.AmountInKg, range => $"=SUM({range.Address})"),
+        new DataCol("KG hind(ilma km.)", item => item.KgPrice),
+        new DataCol("Kogus arvel", item => item.AmountInKg, range => $"=SUM({range.Address})"),
+        new DataCol("Hind arvel(ilma km.)", item => item.TotalBeforeVat, range => $"=SUM({range.Address})"),
+        new DataCol("Kogus PRIA", item => item.AmountInKg, range => $"=SUM({range.Address})"),
+        new DataCol("Hind PRIA(ilma km.)", null, range => $"=SUM({range.Address})", cell => $"=D{cell.Row}*G{cell.Row}"),
     };
 
     public async Task<byte[]> GenerateExcel(PriaCategory category)
@@ -63,7 +68,7 @@ public class PriaExcelReportGenerator
     {
         dataStartRow = Int32.MaxValue;
         dataEndRow = Int32.MinValue;
-        foreach (var item in category.Invoices.SelectMany(invoice => invoice.Items).Where(item => item.PriaCategory == category))
+        foreach (var item in category.Invoices.SelectMany(invoice => invoice.Items).Where(item => item.PriaCategory == category).OrderBy(item => item.Invoice.Invoice.InvoiceDate))
         {
             var rowNo = rowIter.Aquire();
             dataStartRow = Math.Min(dataStartRow, rowNo);
@@ -76,7 +81,10 @@ public class PriaExcelReportGenerator
     {
         foreach (var (col, dataCol) in ColumnIterator())
         {
-            sheet.Cells[row, col].Value = dataCol.DataParser(item);
+            if(dataCol.DataParser is {} val)
+                sheet.Cells[row, col].Value = val(item);
+            else if (dataCol.Formula is { } formula)
+                sheet.Cells[row, col].Formula = formula(new ExcelCellAddress(row, col));
         }
     }
 
