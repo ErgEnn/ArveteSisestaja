@@ -139,7 +139,7 @@
 
         foreach (var invoice in newInvoices)
         {
-            if (invoice.XML is {Length: < 100} xml)
+            if (invoice.XML is null || invoice.XML is {Length: < 100} _)
                 continue;
             var reader = XmlReader.Create(invoice.XML.ToStream(), new XmlReaderSettings() {ConformanceLevel = ConformanceLevel.Document});
             var einvoice = new XmlSerializer(typeof(E_Invoice)).Deserialize(reader) as E_Invoice;

@@ -167,12 +167,41 @@ public class Downloader((string username, string password) credentials, bool hea
                                 var einvoice = new XmlSerializer(typeof(E_Invoice)).Deserialize(reader) as E_Invoice;
                                 var innerInvoice = einvoice.Invoice.Single();
                                 if (innerInvoice.InvoiceInformation.InvoiceNumber != invoiceNo)
-                                    throw new Exception("Mismatch");
+                                {
+                                    invoiceNo = InvoicePage.InvoiceNo.SafeExecuteOnElement(chromeDriver, element => element.Text).Trim();
+                                    if (innerInvoice.InvoiceInformation.InvoiceNumber != invoiceNo)
+                                    {
+                                        if (string.IsNullOrWhiteSpace(invoiceNo))
+                                            invoiceNo = innerInvoice.InvoiceInformation.InvoiceNumber;
+                                        else
+                                            throw new Exception($"InvoiceNo Mismatch {innerInvoice.InvoiceInformation.InvoiceNumber}!={invoiceNo}");
+                                    }
+                                        
+                                }
+
                                 if (innerInvoice.InvoiceInformation.InvoiceDate !=
                                     invoiceDate.ToDateTime(TimeOnly.MinValue))
-                                    throw new Exception("Mismatch");
+                                {
+                                    invoiceDateStr = InvoicePage.InvoiceDate.FindElement(chromeDriver)!.Text.Trim();
+                                    if (string.IsNullOrWhiteSpace(invoiceDateStr))
+                                        invoiceDateStr =
+                                            innerInvoice.InvoiceInformation.InvoiceDate.ToString("dd.MM.yyyy");
+                                    invoiceDate = DateOnly.ParseExact(invoiceDateStr, "dd.MM.yyyy");
+                                    if (innerInvoice.InvoiceInformation.InvoiceDate !=
+                                        invoiceDate.ToDateTime(TimeOnly.MinValue))
+                                        throw new Exception($"Date Mismatch {innerInvoice.InvoiceInformation.InvoiceDate} != {invoiceDate.ToDateTime(TimeOnly.MinValue)}");
+                                }
+
                                 if (innerInvoice.InvoiceParties.SellerParty.Name != invoiceSender)
-                                    throw new Exception("Mismatch");
+                                {
+                                    invoiceSender = InvoicePage.InvoiceSender.FindElement(chromeDriver)!.Text.Trim();
+                                    if(innerInvoice.InvoiceParties.SellerParty.Name != invoiceSender)
+                                        if (string.IsNullOrWhiteSpace(invoiceSender))
+                                            invoiceSender = innerInvoice.InvoiceParties.SellerParty.Name;
+                                        else
+                                            throw new Exception("Seller Mismatch");
+                                }
+                                    
                             }
                             catch (Exception _)
                             {

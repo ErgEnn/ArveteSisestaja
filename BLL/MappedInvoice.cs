@@ -22,7 +22,7 @@ namespace BLL
             public decimal TotalBeforeVat => EInvoiceItem.ItemSum;
             public decimal TotalInclVat => EInvoiceItem.ItemTotal;
             public decimal UnitPriceOnInvoiceBeforeVat => EInvoiceItem.ItemDetailInfo.Single().ItemPrice;
-            public decimal KgPrice => TotalBeforeVat / AmountInKg.Value;
+            public decimal KgPrice => AmountInKg.Value == 0 ? 0: TotalBeforeVat / AmountInKg.Value;
             public decimal Amount => EInvoiceItem.ItemDetailInfo.Single().ItemAmount;
             public decimal? AmountInKg => (Mapping?.Multiplier).Mul(Amount).Div(1000);
             public string PlainName => EInvoiceItem.Description.ReplaceLineEndings("");
